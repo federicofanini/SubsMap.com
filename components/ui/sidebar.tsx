@@ -85,14 +85,7 @@ const SidebarLayout = React.forwardRef<
 SidebarLayout.displayName = "SidebarLayout"
 
 const routeNames: { [key: string]: string } = {
-  dashboard: "Dashboard",
-  patients: "Pazienti",
-  analytics: "Analisi",
-  settings: "Impostazioni",
-  formation: "Formazione",
-  support: "Assistenza",
-  qc: "Controlli Qualità",
-  detection: "Test Clinici",
+  
   // Add more route mappings as needed
 }
 
