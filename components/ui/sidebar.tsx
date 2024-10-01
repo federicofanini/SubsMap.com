@@ -17,6 +17,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { TeamSwitcher } from "../team-switcher"
+import { data } from "../app-sidebar"
 
 export const SIDEBAR_STATE_COOKIE = "sidebar:state"
 
@@ -100,26 +102,7 @@ const SidebarTrigger = React.forwardRef<
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-2">
-        <Button
-          ref={ref}
-          variant="ghost"
-          size="icon"
-          className={cn("h-8 w-8 bg-primary/10 hover:bg-primary hover:text-primary-foreground", className)}
-          onClick={() => onOpenChange(!open)}
-          {...props}
-        >
-          <PanelLeft className="h-4 w-4" />
-          <span className="sr-only">Toggle Sidebar</span>
-        </Button>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbPage className="text-primary font-bold capitalize">
-                {routeNames[currentPage] || currentPage}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <TeamSwitcher teams={data.teams} />
       </div>
     </div>
   )
