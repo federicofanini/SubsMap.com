@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrandIcons } from "@/components/sub/BrandIcons";
 import { useEffect, useState } from "react";
+import { AnimatedList, AnimatedListItem } from "@/components/ui/animated-list";
 
 interface Subscription {
   name: keyof typeof BrandIcons;
@@ -52,19 +53,17 @@ const SubscriptionItem = ({ name, price, renewalDate }: Subscription) => {
 };
 
 export function SubscriptionsList({ className }: { className?: string }) {
-  const [visibleSubs, setVisibleSubs] = useState<Subscription[]>([]);
+  const [visibleSubscriptions, setVisibleSubscriptions] = useState<Subscription[]>([]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setVisibleSubs((prev) => {
-        if (prev.length === subscriptions.length) {
-          return [subscriptions[0]];
-        }
-        return [...prev, subscriptions[prev.length]];
-      });
-    }, 2000);
+    const showSubscriptions = async () => {
+      for (let i = 0; i < subscriptions.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setVisibleSubscriptions((prev) => [...prev, subscriptions[i]]);
+      }
+    };
 
-    return () => clearInterval(timer);
+    showSubscriptions();
   }, []);
 
   return (
@@ -78,8 +77,16 @@ export function SubscriptionsList({ className }: { className?: string }) {
       </div>
       <div className="w-full md:w-1/2 h-full overflow-y-auto">
         <AnimatePresence>
-          {visibleSubs.map((sub, idx) => (
-            <SubscriptionItem {...sub} key={sub.name} />
+          {visibleSubscriptions.map((sub, index) => (
+            <motion.div
+              key={sub.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <SubscriptionItem {...sub} />
+            </motion.div>
           ))}
         </AnimatePresence>
       </div>

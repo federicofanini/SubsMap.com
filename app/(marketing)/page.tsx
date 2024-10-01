@@ -7,8 +7,8 @@ export default async function Page() {
   return (
     <>
       <HeroSection />
-      <SphereMask />
-      <SubscriptionsList />
+      {/* <SphereMask /> */}
+      {/* <SubscriptionsList /> */}
       <Particles
         className="absolute inset-0 -z-10"
         quantity={50}
