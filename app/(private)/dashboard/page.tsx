@@ -1,3 +1,5 @@
+import Calendar from "@/components/sub/Calendar";
+
 export default function DashboardPage() {
-  return <div>Dashboard</div>;
+  return <Calendar />
 }
