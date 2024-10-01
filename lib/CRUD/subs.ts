@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { PrismaClient } from '@prisma/client';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { eurToUsd, usdToEur } from "@/lib/eurusd";
 
 const prisma = new PrismaClient();
 
@@ -89,6 +90,47 @@ export async function fetchUserSubscriptions() {
   } catch (error) {
     console.error('❌ Error fetching user subscriptions:', error);
     return { success: false, error: '❌ Failed to fetch user subscriptions' };
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+export async function calculateMonthlySpending(currency: 'EUR' | 'USD' = 'EUR') {
+  try {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    if (!user || !user.id) {
+      throw new Error('User not authenticated');
+    }
+
+    const subscriptions = await prisma.subscription.findMany({
+      where: { userId: user.id },
+      select: { amount: true, currency: true },
+    });
+
+    let totalEUR = 0;
+    let totalUSD = 0;
+
+    subscriptions.forEach(sub => {
+      if (sub.currency === 'EUR') {
+        totalEUR += Number(sub.amount);
+      } else if (sub.currency === 'USD') {
+        totalUSD += Number(sub.amount);
+      }
+    });
+
+    let finalTotal: number;
+
+    if (currency === 'EUR') {
+      finalTotal = totalEUR + usdToEur(totalUSD);
+    } else {
+      finalTotal = eurToUsd(totalEUR) + totalUSD;
+    }
+
+    return { success: true, total: Number(finalTotal.toFixed(2)), currency };
+  } catch (error) {
+    console.error('❌ Error calculating monthly spending:', error);
+    return { success: false, error: '❌ Failed to calculate monthly spending' };
   } finally {
     await prisma.$disconnect();
   }

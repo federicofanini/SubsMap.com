@@ -10,6 +10,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import CalendarSkeleton from '@/components/sub/CalendarSkelethon';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 type Subscription = {
   id: string;
@@ -24,9 +25,12 @@ const Calendar: React.FC = () => {
   const [days, setDays] = useState<Date[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [monthlySpending, setMonthlySpending] = useState<number | null>(null);
+  const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD'>('EUR');
 
   useEffect(() => {
     fetchSubscriptions();
+    fetchMonthlySpending();
     const start = startOfWeek(startOfMonth(currentDate));
     const end = endOfMonth(currentDate);
     const daysArray = eachDayOfInterval({ start, end });
@@ -34,7 +38,7 @@ const Calendar: React.FC = () => {
       daysArray.push(addDays(daysArray[daysArray.length - 1], 1));
     }
     setDays(daysArray);
-  }, [currentDate]);
+  }, [currentDate, selectedCurrency]);
 
   const fetchSubscriptions = async () => {
     setIsLoading(true);
@@ -49,6 +53,19 @@ const Calendar: React.FC = () => {
       console.error('Error fetching subscriptions:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchMonthlySpending = async () => {
+    try {
+      const response = await fetch(`/api/subscriptions/monthlyExp?currency=${selectedCurrency}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch monthly spending');
+      }
+      const data = await response.json();
+      setMonthlySpending(data.total);
+    } catch (error) {
+      console.error('Error fetching monthly spending:', error);
     }
   };
 
@@ -114,15 +131,19 @@ const Calendar: React.FC = () => {
     return <CalendarSkeleton />;
   }
 
-  const totalSpend = subscriptions.reduce((total, sub) => total + sub.amount, 0);
-
   return (
     <div className="max-w-lg mx-auto bg-black text-white p-4 rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold"><span className='uppercase'>{format(currentDate, 'MMM')}</span> <span className="text-muted-foreground">{format(currentDate, 'yyyy')}</span></h2>
         <div className="text-right">
-          <p className="text-sm text-muted-foreground">Monthly spend</p>
-          <p className="text-xl font-bold">11</p>
+          <p className="text-sm text-muted-foreground font-semibold">Monthly spend</p>
+          <div className="flex items-center justify-end gap-3">
+            <ToggleGroup size="sm" type="single" value={selectedCurrency} onValueChange={(value: 'EUR' | 'USD') => setSelectedCurrency(value)}>
+              <ToggleGroupItem value="EUR" aria-label="Toggle EUR">€</ToggleGroupItem>
+              <ToggleGroupItem value="USD" aria-label="Toggle USD">$</ToggleGroupItem>
+            </ToggleGroup>
+            <p className="text-xl font-bold mr-2">{monthlySpending !== null ? monthlySpending.toFixed(2) : '---'}</p>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-7 gap-2 mb-2">
