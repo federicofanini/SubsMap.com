@@ -25,6 +25,7 @@ import { Card } from "@/components/ui/card"
 import { Separator } from '../ui/separator'
 import { BrandIcons } from '@/components/sub/BrandIcons'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   brand: z.string().min(1, { message: "Please select a brand" }),
@@ -43,6 +44,7 @@ export function InsertSubForm() {
       currency: "EUR",
     },
   })
+  const router = useRouter()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.promise(
@@ -62,6 +64,7 @@ export function InsertSubForm() {
         loading: 'Adding subscription...',
         success: () => {
           form.reset();
+          router.refresh(); // Revalidate and update the table
           return "Subscription added successfully";
         },
         error: 'Failed to add subscription',
@@ -89,10 +92,10 @@ export function InsertSubForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.entries(BrandIcons).map(([name, Icon]) => (
+                      {Object.entries(BrandIcons).map(([name, { icon: Icon, color }]) => (
                         <SelectItem key={name} value={name.toLowerCase()}>
                           <div className="flex items-center">
-                            <Icon className="mr-2" />
+                            <Icon className={`mr-2 text-${color}`} />
                             {name}
                           </div>
                         </SelectItem>

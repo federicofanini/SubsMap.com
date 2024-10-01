@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { addSubscription } from '@/lib/CRUD/subs';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
   try {
@@ -7,6 +8,8 @@ export async function POST(request: Request) {
     const result = await addSubscription(body);
 
     if (result.success) {
+      // Revalidate the path to update the table after adding a subscription
+      revalidatePath('/dashboard');
       return NextResponse.json(result.subscription, { status: 201 });
     } else {
       return NextResponse.json({ error: result.error }, { status: 400 });

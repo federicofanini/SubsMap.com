@@ -111,13 +111,13 @@ const SubTable: React.FC = () => {
           ) : (
             subscriptions.map((sub) => {
               const mappedBrand = mapBrandName(sub.brand);
-              const Icon = BrandIcons[mappedBrand];
+              const BrandIcon = BrandIcons[mappedBrand].icon;
               return (
                 <TableRow key={sub.id}>
                   <TableCell className="font-medium text-xs">
                     <div className="flex items-center">
-                      {Icon && <Icon className="mr-2" width={24} height={24} />}
-                      {mappedBrand}
+                      <BrandIcon className={`mr-2 text-${BrandIcons[mappedBrand].color}`} width={24} height={24} />
+                      {BrandIcons[mappedBrand].name}
                     </div>
                   </TableCell>
                   <TableCell className="text-right text-xs font-semibold">{`${sub.amount} ${sub.currency}`}</TableCell>
