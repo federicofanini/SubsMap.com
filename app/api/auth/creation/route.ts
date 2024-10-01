@@ -54,6 +54,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.redirect(
     process.env.NODE_ENV === "development"
       ? new URL("http://localhost:3000/dashboard")
-      : new URL("https://start.app/dashboard")
+      : new URL("https://subs-tracker-seven.vercel.app/dashboard")
   );
 }
