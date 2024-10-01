@@ -1,24 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { Gauge, PanelLeft, ShieldCheck, Router, User, TestTube } from "lucide-react"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { TeamSwitcher } from "../team-switcher"
 import { data } from "../app-sidebar"
+import { UserMenu } from "@/components/user-menu"
 
 export const SIDEBAR_STATE_COOKIE = "sidebar:state"
 
@@ -95,15 +84,13 @@ const SidebarTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button">
 >(({ className, ...props }, ref) => {
-  const { open, onOpenChange } = useSidebar()
-  const pathname = usePathname()
-  const currentPage = pathname.split('/').filter(Boolean).pop() || ''
 
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-2">
         <TeamSwitcher teams={data.teams} />
       </div>
+      <UserMenu />
     </div>
   )
 })
