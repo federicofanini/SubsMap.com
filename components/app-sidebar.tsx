@@ -50,7 +50,7 @@ import {
 export const data = {
   teams: [
     {
-      name: "Sub Tracker",
+      name: "Subs Map",
       logo: ReplaceAll,
       plan: "Enterprise",
     },

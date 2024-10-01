@@ -5,6 +5,9 @@ import TextShimmer from "@/components/magicui/text-shimmer";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useInView } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 
 export default function HeroSection() {
@@ -22,16 +25,16 @@ export default function HeroSection() {
         </TextShimmer>
       </div>
       <h1 className="bg-gradient-to-br dark:from-white from-black from-30% dark:to-white/40 to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent text-balance sm:text-6xl md:text-7xl lg:text-8xl translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]">
-        Magic UI is the new way
-        <br className="hidden md:block" /> to build landing pages.
+        Track your monthly subscriptions, 
+        <br className="hidden md:block" /> easily.
       </h1>
       <p className="mb-12 text-lg tracking-tight text-gray-400 md:text-xl text-balance translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:400ms]">
-        Beautifully designed, animated components and templates built with
-        <br className="hidden md:block" /> Tailwind CSS, React, and Framer
-        Motion.
+        One place to track all your subscriptions,
+        <br className="hidden md:block" /> and never lose track of your bills.
       </p>
       <Button className="translate-y-[-1rem] animate-fade-in gap-1 rounded-lg text-white dark:text-black opacity-0 ease-in-out [--animation-delay:600ms]">
-        <span>Get Started for free </span>
+        <Sparkles className="mr-2 h-4 w-4" />
+        <Link href="/dashboard">Get Started for FREE </Link>
         <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
       </Button>
       <div
@@ -50,16 +53,19 @@ export default function HeroSection() {
             colorFrom="var(--color-one)"
             colorTo="var(--color-two)"
           />
-
-          <img
-            src="/hero-dark.png"
+          <Image
+            src="/app.png"
             alt="Hero Image"
-            className="hidden relative w-full h-full rounded-[inherit] border object-contain dark:block"
+            width={1336}
+            height={768}
+            className="relative w-full h-full rounded-[inherit] border object-contain hidden md:block"
           />
-          <img
-            src="/hero-light.png"
-            alt="Hero Image"
-            className="block relative w-full h-full  rounded-[inherit] border object-contain dark:hidden"
+          <Image
+            src="/calendar.png"
+            alt="Calendar Image"
+            width={1336}
+            height={768}
+            className="relative w-full h-full rounded-[inherit] border object-contain md:hidden"
           />
         </div>
       </div>

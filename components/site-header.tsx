@@ -3,9 +3,11 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlignJustify, XIcon } from "lucide-react";
+import { AlignJustify, Sparkles, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { TeamSwitcher } from "./team-switcher";
+import { data } from "./app-sidebar";
 
 const menuItem = [
   {
@@ -100,83 +102,24 @@ export function SiteHeader() {
       <header className="fixed left-0 top-0 z-50 w-full translate-y-[-1rem] animate-fade-in border-b opacity-0 backdrop-blur-[12px] [--animation-delay:600ms]">
         <div className="container flex h-[3.5rem] items-center justify-between">
           <Link className="text-md flex items-center" href="/">
-            Magic UI
+            <TeamSwitcher teams={data.teams} />
           </Link>
 
           <div className="ml-auto flex h-full items-center">
-            <Link className="mr-6 text-sm" href="/signin">
-              Log in
-            </Link>
             <Link
               className={cn(
                 buttonVariants({ variant: "secondary" }),
                 "mr-6 text-sm"
               )}
-              href="/signup"
+              href="/dashboard"
             >
-              Sign up
+              <Sparkles className="mr-2 h-4 w-4" />
+              Get started
             </Link>
           </div>
-          <button
-            className="ml-6 md:hidden"
-            onClick={() => setHamburgerMenuIsOpen((open) => !open)}
-          >
-            <span className="sr-only">Toggle menu</span>
-            {hamburgerMenuIsOpen ? <XIcon /> : <AlignJustify />}
-          </button>
         </div>
       </header>
-      <AnimatePresence>
-        <motion.nav
-          initial="initial"
-          exit="exit"
-          variants={mobilenavbarVariant}
-          animate={hamburgerMenuIsOpen ? "animate" : "exit"}
-          className={cn(
-            `fixed left-0 top-0 z-50 h-screen w-full overflow-auto bg-background/70 backdrop-blur-[12px] `,
-            {
-              "pointer-events-none": !hamburgerMenuIsOpen,
-            }
-          )}
-        >
-          <div className="container flex h-[3.5rem] items-center justify-between">
-            <Link className="text-md flex items-center" href="/">
-              Magic UI
-            </Link>
-
-            <button
-              className="ml-6 md:hidden"
-              onClick={() => setHamburgerMenuIsOpen((open) => !open)}
-            >
-              <span className="sr-only">Toggle menu</span>
-              {hamburgerMenuIsOpen ? <XIcon /> : <AlignJustify />}
-            </button>
-          </div>
-          <motion.ul
-            className={`flex flex-col md:flex-row md:items-center uppercase md:normal-case ease-in`}
-            variants={containerVariants}
-            initial="initial"
-            animate={hamburgerMenuIsOpen ? "open" : "exit"}
-          >
-            {menuItem.map((item) => (
-              <motion.li
-                variants={mobileLinkVar}
-                key={item.id}
-                className="border-grey-dark pl-6 py-0.5 border-b md:border-none"
-              >
-                <Link
-                  className={`hover:text-grey flex h-[var(--navigation-height)] w-full items-center text-xl transition-[color,transform] duration-300 md:translate-y-0 md:text-sm md:transition-colors ${
-                    hamburgerMenuIsOpen ? "[&_a]:translate-y-0" : ""
-                  }`}
-                  href={item.href}
-                >
-                  {item.label}
-                </Link>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </motion.nav>
-      </AnimatePresence>
+      
     </>
   );
 }

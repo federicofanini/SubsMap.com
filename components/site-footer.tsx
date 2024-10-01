@@ -1,4 +1,5 @@
-import { DiscordLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, DiscordLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import { ReplaceAll } from "lucide-react";
 import Link from "next/link";
 
 const footerNavs = [
@@ -55,14 +56,15 @@ const footerNavs = [
 
 const footerSocials = [
   {
-    href: "",
-    name: "Discord",
-    icon: <DiscordLogoIcon className="h-4 w-4" />,
-  },
-  {
-    href: "",
+    href: "https://x.com/FedericoFan",
     name: "Twitter",
-    icon: <TwitterLogoIcon className="h-4 w-4" />,
+    icon: (
+      <div className="flex items-center gap-2 group">
+        <span className="text-sm font-medium text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-600">Follow me on X</span>
+        <TwitterLogoIcon className="h-4 w-4" />
+        <ArrowRightIcon className="h-3 w-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
+      </div>
+    ),
   },
 ];
 
@@ -73,15 +75,12 @@ export function SiteFooter() {
         <div className="md:flex md:justify-between px-8 p-4 py-16 sm:pb-16 gap-4">
           <div className="mb-12 flex-col flex gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <img
-                src="https://magicui.design/icon.png"
-                className="h-8 w-8 text-primary"
-              />
+              <ReplaceAll className="h-8 w-8 text-primary text-black" />
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Magic UI
+                Subs Map
               </span>
             </Link>
-            <p className="max-w-xs">UI Library for Design Engineers</p>
+            <p className="max-w-xs">Track your monthly subscriptions, easily.</p>
           </div>
           <div className="grid grid-cols-1 gap-8 sm:gap-10 sm:grid-cols-3">
             {footerNavs.map((nav) => (
@@ -112,6 +111,7 @@ export function SiteFooter() {
               <Link
                 key={social.name}
                 href={social.href}
+                target="_blank"
                 className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-600 fill-gray-500 hover:fill-gray-900 dark:hover:fill-gray-600"
               >
                 {social.icon}
@@ -122,7 +122,7 @@ export function SiteFooter() {
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © {new Date().getFullYear()}{" "}
             <Link href="/" className="cursor-pointer">
-              Magic UI
+              Subs Map
             </Link>
             . All Rights Reserved.
           </span>
