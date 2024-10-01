@@ -3,15 +3,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/db";
 
+interface KindeUser {
+  id: string;
+  email: string | null;
+  given_name?: string;
+  family_name?: string;
+  picture?: string;
+}
+
+interface DbUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  imageUrl: string | null;
+  customer_id: string;
+  price_id: string;
+  has_access: boolean;
+}
+
 export async function GET(req: NextRequest) {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  if (!user || user === null || !user.id)
-    throw new Error("something went wrong please try again");
+  if (!user || !user.id)
+    throw new Error("Something went wrong, please try again");
 
-  let dbUser = await prisma.user.findUnique({
+  let dbUser: DbUser | null = await prisma.user.findUnique({
     where: {
       id: user.id,
     },
@@ -34,7 +53,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.redirect(
     process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/dashboard"
-      : "https://start.app/dashboard"
+      ? new URL("http://localhost:3000/dashboard")
+      : new URL("https://start.app/dashboard")
   );
 }
