@@ -53,7 +53,7 @@ const Calendar: React.FC = () => {
       <HoverCard>
         <HoverCardTrigger asChild>
           <div className="w-full h-full relative">
-            <Icon width={24} height={24} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            <Icon width={24} height={24} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden sm:block" />
             <div className={`absolute top-0 right-0 w-2 h-2 rounded-full ${sub.color}`}></div>
           </div>
         </HoverCardTrigger>
