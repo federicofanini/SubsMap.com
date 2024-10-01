@@ -46,7 +46,7 @@ export function InsertSubForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast.promise(
-      fetch('/api/subscriptions', {
+      fetch('/api/subscriptions/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

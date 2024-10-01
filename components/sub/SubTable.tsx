@@ -1,35 +1,75 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { BrandIcons } from '@/components/sub/BrandIcons';
-import { Trash2, PieChart } from 'lucide-react';
+import { Trash2, PieChart, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { toast } from 'sonner';
 
 type Subscription = {
-  name: keyof typeof BrandIcons;
+  id: string;
+  brand: string;
   amount: number;
   currency: string;
-  nextPaymentDay: number;
+  day: number;
 };
 
-const subscriptions: Subscription[] = [
-  { name: 'Netflix', amount: 14.99, currency: 'EUR', nextPaymentDay: 7 },
-  { name: 'Spotify', amount: 9.99, currency: 'EUR', nextPaymentDay: 15 },
-  { name: 'LinkedIn', amount: 29.99, currency: 'EUR', nextPaymentDay: 24 },
-  { name: 'Amazon', amount: 7.99, currency: 'EUR', nextPaymentDay: 29 },
-];
-
 const SubTable: React.FC = () => {
-  const handleDelete = (name: string) => {
-    console.log(`Delete subscription: ${name}`);
-    // Implement delete logic here
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSubscriptions();
+  }, []);
+
+  const fetchSubscriptions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/subscriptions/getSubs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch subscriptions');
+      }
+      const data = await response.json();
+      setSubscriptions(data);
+    } catch (error) {
+      console.error('Error fetching subscriptions:', error);
+      toast.error('Failed to fetch subscriptions');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/subscriptions/delete?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete subscription');
+      }
+      toast.success('Subscription deleted successfully');
+      fetchSubscriptions(); // Refresh the list after deletion
+    } catch (error) {
+      console.error('Error deleting subscription:', error);
+      toast.error('Failed to delete subscription');
+    }
   };
 
   const handlePieChart = () => {
     console.log(`Show pie chart for all subscriptions`);
     // Implement pie chart logic here
+  };
+
+  const mapBrandName = (brand: string): keyof typeof BrandIcons => {
+    const brandMap: { [key: string]: keyof typeof BrandIcons } = {
+      'spotify': 'Spotify',
+      'amazon': 'Amazon',
+      'linkedin': 'LinkedIn',
+      'netflix': 'Netflix',
+    };
+    return brandMap[brand.toLowerCase()] || brand as keyof typeof BrandIcons;
   };
 
   return (
@@ -55,33 +95,49 @@ const SubTable: React.FC = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {subscriptions.map((sub) => {
-            const Icon = BrandIcons[sub.name];
-            return (
-              <TableRow key={sub.name}>
-                <TableCell className="font-medium text-xs">
-                  <div className="flex items-center">
-                    <Icon className="mr-2" width={24} height={24} />
-                    {sub.name}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right text-xs font-semibold">{`${sub.amount} ${sub.currency}`}</TableCell>
-                <TableCell className="text-right text-xs font-semibold">{`Every ${sub.nextPaymentDay}${getDayOfMonthSuffix(sub.nextPaymentDay)}`}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(sub.name)}
-                      className="h-8 w-8 p-0 hover:bg-rose-500"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={4} className="h-24 text-center">
+                <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                <p className="mt-2 text-sm text-gray-400">Loading subscriptions...</p>
+              </TableCell>
+            </TableRow>
+          ) : subscriptions.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="h-24 text-center text-sm text-gray-400">
+                No active subscriptions found.
+              </TableCell>
+            </TableRow>
+          ) : (
+            subscriptions.map((sub) => {
+              const mappedBrand = mapBrandName(sub.brand);
+              const Icon = BrandIcons[mappedBrand];
+              return (
+                <TableRow key={sub.id}>
+                  <TableCell className="font-medium text-xs">
+                    <div className="flex items-center">
+                      {Icon && <Icon className="mr-2" width={24} height={24} />}
+                      {mappedBrand}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-xs font-semibold">{`${sub.amount} ${sub.currency}`}</TableCell>
+                  <TableCell className="text-right text-xs font-semibold">{`Every ${sub.day}${getDayOfMonthSuffix(sub.day)}`}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(sub.id)}
+                        className="h-8 w-8 p-0 hover:bg-rose-500"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          )}
         </TableBody>
       </Table>
     </Card>
