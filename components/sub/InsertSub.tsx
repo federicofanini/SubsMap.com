@@ -24,15 +24,12 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Separator } from '../ui/separator'
 import { BrandIcons } from '@/components/sub/BrandIcons'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
   brand: z.string().min(1, { message: "Please select a brand" }),
-  day: z.string().regex(/^([1-9]|[12]\d|3[01])$/, {
-    message: "Please enter a valid day (1-31)",
-  }),
-  amount: z.string().regex(/^\d+(\.\d{1,2})?$/, {
-    message: "Please enter a valid amount",
-  }),
+  day: z.number().int().min(1).max(31, { message: "Please enter a valid day (1-31)" }),
+  amount: z.number().positive({ message: "Please enter a valid amount" }),
   currency: z.enum(["EUR", "USD"]),
 })
 
@@ -41,14 +38,35 @@ export function InsertSubForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       brand: "",
-      day: "",
-      amount: "",
+      day: 1,
+      amount: 0,
       currency: "EUR",
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    toast.promise(
+      fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to add subscription');
+        }
+        return response.json();
+      }),
+      {
+        loading: 'Adding subscription...',
+        success: () => {
+          form.reset();
+          return "Subscription added successfully";
+        },
+        error: 'Failed to add subscription',
+      }
+    );
   }
 
   return (
@@ -92,7 +110,7 @@ export function InsertSubForm() {
                 <FormItem>
                   <FormLabel className="text-xs text-muted-foreground font-semibold">Day</FormLabel>
                   <FormControl>
-                    <Input type="number" min="1" max="31" {...field} className="bg-gray-800 text-white" />
+                    <Input type="number" min="1" max="31" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="bg-gray-800 text-white" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,7 +123,7 @@ export function InsertSubForm() {
                 <FormItem>
                   <FormLabel className="text-xs text-muted-foreground font-semibold">Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} className="bg-gray-800 text-white" />
+                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} className="bg-gray-800 text-white" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
