@@ -68,7 +68,16 @@ const Calendar: React.FC = () => {
 
     return (
       <div className="w-full h-full relative">
-        {subs.map((sub, index) => {
+        <div className="absolute top-1 right-1 flex flex-wrap justify-end gap-1">
+          {subs.map((sub) => {
+            const mappedBrand = mapBrandName(sub.brand);
+            const brandColor = BrandIcons[mappedBrand].color;
+            return (
+              <div key={sub.id} className={`w-2 h-2 rounded-full bg-${brandColor}`}></div>
+            );
+          })}
+        </div>
+        {subs.map((sub) => {
           const mappedBrand = mapBrandName(sub.brand);
           const BrandIcon = BrandIcons[mappedBrand].icon;
           const brandColor = BrandIcons[mappedBrand].color;
@@ -77,7 +86,6 @@ const Calendar: React.FC = () => {
               <HoverCardTrigger asChild>
                 <div className="absolute inset-0 flex flex-col items-center">
                   <BrandIcon className="mt-1 w-4 h-4 hidden sm:block" />
-                  <div className={`absolute top-1 right-1 w-2 h-2 rounded-full bg-${brandColor}`}></div>
                 </div>
               </HoverCardTrigger>
               <HoverCardContent className={`w-64 p-4 bg-black border border-${brandColor} rounded-lg`}>
