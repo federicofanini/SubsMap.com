@@ -12,12 +12,16 @@ const footerNavs = [
         name: "🚢 AstroPort",
       },
       {
-        href: "/pricing",
-        name: "Pricing",
+        href: "https://typefully.com/?via=federicofan",
+        name: "🪽 Typefully",
       },
       {
-        href: "/faq",
-        name: "FAQ",
+        href: "https://shipfa.st/?via=federicofan",
+        name: "⚡️ Shipfa.st",
+      },
+      {
+        href: "https://byedispute.com/?via=federicofan",
+        name: "🤝 ByeDispute",
       },
     ],
   },
@@ -26,16 +30,16 @@ const footerNavs = [
     label: "Community",
     items: [
       {
-        href: "/",
-        name: "Discord",
+        href: "https://discord.gg/3mwjehpSFy",
+        name: "💬 Discord",
       },
       {
-        href: "/",
-        name: "Twitter",
+        href: "https://x.com/FedericoFan",
+        name: "🐦 Twitter",
       },
       {
-        href: "mailto:hello@chatcollect.com",
-        name: "Email",
+        href: "mailto:f@fanini.eu",
+        name: "📧 Email",
       },
     ],
   },

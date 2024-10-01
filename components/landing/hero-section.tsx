@@ -3,6 +3,7 @@
 import { BorderBeam } from "@/components/magicui/border-beam";
 import TextShimmer from "@/components/magicui/text-shimmer";
 import { Button } from "@/components/ui/button";
+import { countUsers, getUsersLeft } from "@/lib/CRUD/users";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useInView } from "framer-motion";
 import { Sparkles } from "lucide-react";
@@ -20,8 +21,10 @@ export default function HeroSection() {
     >
       <div className="backdrop-filter-[12px] inline-flex h-7 items-center justify-between rounded-full border border-white/5 bg-white/10 px-3 text-xs text-white dark:text-black transition-all ease-in hover:cursor-pointer hover:bg-white/20 group gap-1 translate-y-[-1rem] animate-fade-in opacity-0">
         <TextShimmer className="inline-flex items-center justify-center">
-          <span>✨ Introducing Magic UI Template</span>{" "}
+          <Link href="/dashboard" className="flex items-center gap-1">
+          <span>✨ Free for the first 20 users ({getUsersLeft()} left)</span>{" "}
           <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </Link>
         </TextShimmer>
       </div>
       <h1 className="bg-gradient-to-br dark:from-white from-black from-30% dark:to-white/40 to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent text-balance sm:text-6xl md:text-7xl lg:text-8xl translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]">

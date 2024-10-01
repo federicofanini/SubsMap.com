@@ -1,9 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatedList } from "@/components/ui/animated-list";
+import { AnimatePresence, motion } from "framer-motion";
 import { BrandIcons } from "@/components/sub/BrandIcons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Subscription {
   name: keyof typeof BrandIcons;
@@ -21,7 +21,11 @@ const subscriptions: Subscription[] = [
 const SubscriptionItem = ({ name, price, renewalDate }: Subscription) => {
   const { icon: Icon, color } = BrandIcons[name];
   return (
-    <figure
+    <motion.figure
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
       className={cn(
         "relative mx-auto w-full max-w-[400px] cursor-pointer rounded-2xl p-4",
         "transition-all duration-200 ease-in-out hover:scale-[103%]",
@@ -43,11 +47,26 @@ const SubscriptionItem = ({ name, price, renewalDate }: Subscription) => {
           </p>
         </div>
       </div>
-    </figure>
+    </motion.figure>
   );
 };
 
 export function SubscriptionsList({ className }: { className?: string }) {
+  const [visibleSubs, setVisibleSubs] = useState<Subscription[]>([]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisibleSubs((prev) => {
+        if (prev.length === subscriptions.length) {
+          return [subscriptions[0]];
+        }
+        return [...prev, subscriptions[prev.length]];
+      });
+    }, 2000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={cn("mx-auto max-w-5xl flex flex-col md:flex-row items-center justify-between gap-8 p-6 rounded-lg bg-background md:shadow-xl min-h-[500px] md:h-[400px] h-[700px] md:max-h-none", className)}>
       <div className="w-full md:w-1/2 p-4">
@@ -58,11 +77,11 @@ export function SubscriptionsList({ className }: { className?: string }) {
         </p>
       </div>
       <div className="w-full md:w-1/2 h-full overflow-y-auto">
-        <AnimatedList className="space-y-4">
-          {subscriptions.map((sub, idx) => (
-            <SubscriptionItem {...sub} key={idx} />
+        <AnimatePresence>
+          {visibleSubs.map((sub, idx) => (
+            <SubscriptionItem {...sub} key={sub.name} />
           ))}
-        </AnimatedList>
+        </AnimatePresence>
       </div>
     </div>
   );
