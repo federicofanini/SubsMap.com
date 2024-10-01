@@ -21,12 +21,13 @@ export async function GET(req: NextRequest) {
     dbUser = await prisma.user.create({
       data: {
         id: user.id,
-          email: user.email ?? "",
-          firstName: user.given_name ?? "",
-          lastName: user.family_name ?? "",
-          imageUrl: user.picture,
-          customer_id: "",
-          price_id: "",
+        email: user.email ?? "",
+        firstName: user.given_name ?? "",
+        lastName: user.family_name ?? "",
+        imageUrl: user.picture ?? null,
+        customer_id: "",
+        price_id: "",
+        has_access: false,
       },
     });
   }
