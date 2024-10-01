@@ -1,14 +1,15 @@
 import { ArrowRightIcon, DiscordLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import { ReplaceAll } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const footerNavs = [
   {
-    label: "Product",
+    label: "Startups",
     items: [
       {
-        href: "/",
-        name: "Email Collection",
+        href: "https://astroport.it",
+        name: "🚢 AstroPort",
       },
       {
         href: "/pricing",
@@ -107,17 +108,12 @@ export function SiteFooter() {
 
         <div className="flex flex-col sm:flex-row sm:flex sm:items-center sm:justify-between rounded-md border-neutral-700/20 py-4 px-8 gap-2">
           <div className="flex space-x-5 sm:justify-center sm:mt-0">
-            {footerSocials.map((social) => (
-              <Link
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-600 fill-gray-500 hover:fill-gray-900 dark:hover:fill-gray-600"
-              >
-                {social.icon}
-                <span className="sr-only">{social.name}</span>
+            <div className="flex justify-center items-center mt-4 gap-2">
+              <Link href="https://x.com/FedericoFan" target="_blank" className="flex items-center gap-2">
+                <Image src="/ff.jpg" alt="Federico Fan" width={24} height={24} className="rounded-full" />
+                <span className="text-sm text-gray-500 mr-2">Powered by Federico Fan</span>
               </Link>
-            ))}
+            </div>
           </div>
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © {new Date().getFullYear()}{" "}
@@ -127,6 +123,7 @@ export function SiteFooter() {
             . All Rights Reserved.
           </span>
         </div>
+        
       </div>
       {/*   <SiteBanner /> */}
     </footer>
