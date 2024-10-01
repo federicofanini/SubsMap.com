@@ -28,7 +28,8 @@ import {
   User,
   Settings,
   Rss,
-  ShipIcon
+  ShipIcon,
+  ReplaceAll
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -49,8 +50,8 @@ import {
 export const data = {
   teams: [
     {
-      name: "AstroPort",
-      logo: ShipIcon,
+      name: "Sub Tracker",
+      logo: ReplaceAll,
       plan: "Enterprise",
     },
   ],
