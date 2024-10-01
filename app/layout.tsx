@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -21,6 +22,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          defer
+          data-domain="subsmap.com"
+          src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
+        />
+        <Script id="plausible-setup">
+          {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
+        </Script>
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
