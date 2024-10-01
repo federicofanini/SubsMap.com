@@ -9,7 +9,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { Loader2 } from 'lucide-react';
+import CalendarSkeleton from '@/components/sub/CalendarSkelethon';
 
 type Subscription = {
   id: string;
@@ -111,11 +111,7 @@ const Calendar: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <CalendarSkeleton />;
   }
 
   const totalSpend = subscriptions.reduce((total, sub) => total + sub.amount, 0);
