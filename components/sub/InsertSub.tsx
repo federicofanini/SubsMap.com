@@ -34,7 +34,11 @@ const formSchema = z.object({
   currency: z.enum(["EUR", "USD"]),
 })
 
-export function InsertSubForm() {
+interface InsertSubFormProps {
+  onNewSubscription: () => void;
+}
+
+export function InsertSubForm({ onNewSubscription }: InsertSubFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,6 +68,7 @@ export function InsertSubForm() {
         loading: 'Adding subscription...',
         success: () => {
           form.reset();
+          onNewSubscription(); // Call the callback function to update the parent component
           router.refresh(); // Revalidate and update the table
           return "Subscription added successfully";
         },
