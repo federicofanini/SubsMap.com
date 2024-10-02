@@ -88,9 +88,9 @@ const Calendar: React.FC = () => {
         <div className="absolute top-1 right-1 flex flex-wrap justify-end gap-1">
           {subs.map((sub) => {
             const mappedBrand = mapBrandName(sub.brand);
-            const brandColor = BrandIcons[mappedBrand].color;
+            const BrandIcon = BrandIcons[mappedBrand].icon;
             return (
-              <div key={sub.id} className={`w-2 h-2 rounded-full bg-${brandColor}`}></div>
+              <BrandIcon key={sub.id} className="w-2 h-2 sm:hidden" />
             );
           })}
         </div>
