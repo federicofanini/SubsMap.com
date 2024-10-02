@@ -97,13 +97,13 @@ const SidebarTrigger = React.forwardRef<
         <Button variant="outline" size="sm">
           <Link href="/dashboard" className="flex items-center gap-2">
             <CalendarIcon className="size-3" />
-            Calendar 
+            <span className="hidden sm:inline">Calendar</span>
           </Link>
         </Button>
         <Button variant="outline" size="sm">
           <Link href="/dashboard/leaderboard" className="flex items-center gap-2">
             <TrophyIcon className="size-3" />
-            Leaderboard
+            <span className="hidden sm:inline">Leaderboard</span>
           </Link>
         </Button>
         <UserMenu />
