@@ -16,7 +16,7 @@ const subscriptions: Subscription[] = [
   { name: "Netflix", price: "$15.99", renewalDate: "5 days" },
   { name: "Spotify", price: "$9.99", renewalDate: "12 days" },
   { name: "Amazon", price: "$14.99", renewalDate: "18 days" },
-  { name: "LinkedIn", price: "$29.99", renewalDate: "23 days" },
+  { name: "Linkedin", price: "$29.99", renewalDate: "23 days" },
 ];
 
 const SubscriptionItem = ({ name, price, renewalDate }: Subscription) => {
