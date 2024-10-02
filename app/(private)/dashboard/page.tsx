@@ -8,15 +8,15 @@ import SubTable from "@/components/sub/SubTable";
 export default function DashboardPage() {
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleNewSubscription = useCallback(() => {
+  const handleDataChange = useCallback(() => {
     setRefreshKey(prevKey => prevKey + 1);
   }, []);
 
   return (
     <>
       <Calendar key={`calendar-${refreshKey}`} />
-      <InsertSubForm onNewSubscription={handleNewSubscription} />
-      <SubTable key={`subtable-${refreshKey}`} />
+      <InsertSubForm onNewSubscription={handleDataChange} />
+      <SubTable key={`subtable-${refreshKey}`} onDelete={handleDataChange} />
     </>
   )
 }

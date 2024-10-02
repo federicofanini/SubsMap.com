@@ -16,7 +16,11 @@ type Subscription = {
   day: number;
 };
 
-const SubTable: React.FC = () => {
+interface SubTableProps {
+  onDelete: () => void;
+}
+
+const SubTable: React.FC<SubTableProps> = ({ onDelete }) => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,6 +55,7 @@ const SubTable: React.FC = () => {
       }
       toast.success('Subscription deleted successfully');
       fetchSubscriptions(); // Refresh the list after deletion
+      onDelete(); // Call the onDelete prop to update the Calendar component
     } catch (error) {
       console.error('Error deleting subscription:', error);
       toast.error('Failed to delete subscription');
