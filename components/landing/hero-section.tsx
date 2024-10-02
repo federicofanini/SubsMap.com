@@ -100,6 +100,9 @@ export default function HeroSection() {
       <div className="max-w-lg mx-auto mt-8">
         <Sponsor position="bottom" />
       </div>
+      <div className="max-w-lg mx-auto mt-8">
+        <Sponsor position="bottom" />
+      </div>
     </section>
   );
 }
