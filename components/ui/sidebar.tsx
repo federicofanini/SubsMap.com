@@ -8,6 +8,9 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { TeamSwitcher } from "../team-switcher"
 import { data } from "../app-sidebar"
 import { UserMenu } from "@/components/user-menu"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { CalendarIcon, TrophyIcon } from "lucide-react"
 
 export const SIDEBAR_STATE_COOKIE = "sidebar:state"
 
@@ -90,7 +93,21 @@ const SidebarTrigger = React.forwardRef<
       <div className="flex items-center gap-2">
         <TeamSwitcher teams={data.teams} />
       </div>
-      <UserMenu />
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <CalendarIcon className="size-3" />
+            Calendar 
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm">
+          <Link href="/dashboard/leaderboard" className="flex items-center gap-2">
+            <TrophyIcon className="size-3" />
+            Leaderboard
+          </Link>
+        </Button>
+        <UserMenu />
+      </div>
     </div>
   )
 })
