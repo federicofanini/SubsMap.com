@@ -62,16 +62,6 @@ const SubTable: React.FC = () => {
     // Implement pie chart logic here
   };
 
-  const mapBrandName = (brand: string): keyof typeof BrandIcons => {
-    const brandMap: { [key: string]: keyof typeof BrandIcons } = {
-      'spotify': 'Spotify',
-      'amazon': 'Amazon',
-      'linkedin': 'LinkedIn',
-      'netflix': 'Netflix',
-    };
-    return brandMap[brand.toLowerCase()] || brand as keyof typeof BrandIcons;
-  };
-
   return (
     <Card className="max-w-lg mx-auto bg-black text-white p-4 rounded-lg border-none mt-2">
       <div className="flex justify-between items-center mb-4">
@@ -110,14 +100,16 @@ const SubTable: React.FC = () => {
             </TableRow>
           ) : (
             subscriptions.map((sub) => {
-              const mappedBrand = mapBrandName(sub.brand);
-              const BrandIcon = BrandIcons[mappedBrand].icon;
+              const brandKey = sub.brand.charAt(0).toUpperCase() + sub.brand.slice(1) as keyof typeof BrandIcons;
+              const BrandIcon = BrandIcons[brandKey]?.icon || BrandIcons.Twitter.icon; // Fallback to Twitter if brand not found
+              const brandColor = BrandIcons[brandKey]?.color || BrandIcons.Twitter.color;
+              const brandName = BrandIcons[brandKey]?.name || sub.brand;
               return (
                 <TableRow key={sub.id}>
                   <TableCell className="font-medium text-xs">
                     <div className="flex items-center">
-                      <BrandIcon className={`mr-2 text-${BrandIcons[mappedBrand].color}`} width={24} height={24} />
-                      {BrandIcons[mappedBrand].name}
+                      <BrandIcon className={`mr-2 text-${brandColor}`} width={24} height={24} />
+                      {brandName}
                     </div>
                   </TableCell>
                   <TableCell className="text-right text-xs font-semibold">{`${sub.amount} ${sub.currency}`}</TableCell>

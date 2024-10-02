@@ -27,6 +27,7 @@ const Calendar: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [monthlySpending, setMonthlySpending] = useState<number | null>(null);
   const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD'>('EUR');
+  const [brandLogos, setBrandLogos] = useState<{ [key: string]: React.ComponentType<React.SVGProps<SVGSVGElement>> }>({});
 
   useEffect(() => {
     fetchSubscriptions();
@@ -49,6 +50,16 @@ const Calendar: React.FC = () => {
       }
       const data = await response.json();
       setSubscriptions(data);
+      
+      // Map brand logos
+      const logos: { [key: string]: React.ComponentType<React.SVGProps<SVGSVGElement>> } = {};
+      data.forEach((sub: Subscription) => {
+        const brandKey = sub.brand.charAt(0).toUpperCase() + sub.brand.slice(1) as keyof typeof BrandIcons;
+        if (BrandIcons[brandKey]) {
+          logos[sub.brand] = BrandIcons[brandKey].icon;
+        }
+      });
+      setBrandLogos(logos);
     } catch (error) {
       console.error('Error fetching subscriptions:', error);
     } finally {
@@ -69,47 +80,30 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const mapBrandName = (brand: string): keyof typeof BrandIcons => {
-    const brandMap: { [key: string]: keyof typeof BrandIcons } = {
-      'spotify': 'Spotify',
-      'amazon': 'Amazon',
-      'linkedin': 'LinkedIn',
-      'netflix': 'Netflix',
-    };
-    return brandMap[brand.toLowerCase()] || 'Default' as keyof typeof BrandIcons;
-  };
-
   const getDayContent = (day: number) => {
     const subs = subscriptions.filter(s => s.day === day);
     if (subs.length === 0) return null;
 
     return (
-      <div className="w-full h-full relative">
-        <div className="absolute top-1 right-1 flex flex-wrap justify-end gap-1">
-          {subs.map((sub) => {
-            const mappedBrand = mapBrandName(sub.brand);
-            const BrandIcon = BrandIcons[mappedBrand].icon;
-            return (
-              <BrandIcon key={sub.id} className="w-2 h-2 sm:hidden" />
-            );
-          })}
-        </div>
+      <div className="w-full h-full relative flex items-center justify-center">
         {subs.map((sub) => {
-          const mappedBrand = mapBrandName(sub.brand);
-          const BrandIcon = BrandIcons[mappedBrand].icon;
-          const brandColor = BrandIcons[mappedBrand].color;
+          const BrandIcon = brandLogos[sub.brand];
+          const brandKey = sub.brand.charAt(0).toUpperCase() + sub.brand.slice(1) as keyof typeof BrandIcons;
+          const brandInfo = BrandIcons[brandKey];
+          if (!brandInfo) return null;
+          const { name, color } = brandInfo;
           return (
             <HoverCard key={sub.id}>
               <HoverCardTrigger asChild>
-                <div className="absolute inset-0 flex flex-col items-center">
-                  <BrandIcon className="mt-1 w-4 h-4 hidden sm:block" />
+                <div className="flex items-center justify-center">
+                  {BrandIcon && <BrandIcon className="w-4 h-4" />}
                 </div>
               </HoverCardTrigger>
-              <HoverCardContent className={`w-64 p-4 bg-black border border-${brandColor} rounded-lg`}>
+              <HoverCardContent className={`w-64 p-4 bg-black border border-${color} rounded-lg`}>
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center">
-                    <BrandIcon className="mr-3 w-8 h-8" />
-                    <h3 className="text-xl font-bold text-white">{BrandIcons[mappedBrand].name}</h3>
+                    {BrandIcon && <BrandIcon className="mr-3 w-8 h-8" />}
+                    <h3 className="text-xl font-bold text-white">{name}</h3>
                   </div>
                   <span className="text-white font-semibold text-lg">{sub.amount} {sub.currency}</span>
                 </div>
