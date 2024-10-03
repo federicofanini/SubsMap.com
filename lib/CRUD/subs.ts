@@ -10,6 +10,7 @@ const subSchema = z.object({
   day: z.number().int().min(1).max(31),
   amount: z.number().positive(),
   currency: z.enum(["EUR", "USD"]),
+  note: z.string().optional(),
 });
 
 export async function addSubscription(data: z.infer<typeof subSchema>) {

@@ -32,6 +32,7 @@ const formSchema = z.object({
   day: z.number().int().min(1).max(31, { message: "Please enter a valid day (1-31)" }),
   amount: z.number().positive({ message: "Please enter a valid amount" }),
   currency: z.enum(["EUR", "USD"]),
+  note: z.string().optional(),
 })
 
 interface InsertSubFormProps {
@@ -46,6 +47,7 @@ export function InsertSubForm({ onNewSubscription }: InsertSubFormProps) {
       day: 1,
       amount: 0,
       currency: "EUR",
+      note: "",
     },
   })
   const router = useRouter()
@@ -159,6 +161,19 @@ export function InsertSubForm({ onNewSubscription }: InsertSubFormProps) {
               )}
             />
           </div>
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs text-muted-foreground font-semibold">Note</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-gray-800 text-white" placeholder="Optional note" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button size="sm" type="submit" className="w-full font-bold bg-gray-800/90 hover:bg-gray-700 text-white">Add Subscription</Button>
         </form>
       </Form>

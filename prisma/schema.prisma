@@ -30,6 +30,6 @@ model Subscription {
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+  note      String?
 }
 
