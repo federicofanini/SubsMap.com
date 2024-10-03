@@ -12,6 +12,7 @@ import {
 import CalendarSkeleton from '@/components/sub/CalendarSkelethon';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import Sponsor from '@/components/sub/Sponsor';
+import { Separator } from '../ui/separator';
 
 type Subscription = {
   id: string;
@@ -19,6 +20,7 @@ type Subscription = {
   amount: number;
   currency: string;
   day: number;
+  note?: string;
 };
 
 const Calendar: React.FC = () => {
@@ -113,6 +115,12 @@ const Calendar: React.FC = () => {
                     <span>Every {sub.day}th</span>
                     <span>Next payment</span>
                   </div>
+                  <Separator className="my-2" />
+                  {sub.note && (
+                    <div className="text-gray-400 text-xs mt-2 text-left">
+                      <span className="font-semibold">Note:</span> {sub.note}
+                    </div>
+                  )}
                 </div>
               </HoverCardContent>
             </HoverCard>
