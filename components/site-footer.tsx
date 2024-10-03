@@ -99,6 +99,7 @@ export function SiteFooter() {
                       <Link
                         href={item.href}
                         className="cursor-pointer text-gray-400 hover:text-gray-200 duration-200 font-[450] text-sm"
+                        target="_blank"
                       >
                         {item.name}
                       </Link>

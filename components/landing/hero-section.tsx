@@ -62,8 +62,16 @@ export default function HeroSection() {
         <Link href="/dashboard">Get Started for FREE </Link>
         <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
       </Button>
-      <div className="max-w-lg mx-auto mb-8">
-        <Sponsor position="bottom" />
+      <div className="max-w-lg mx-auto">
+        <Link href="https://litlyx.com/?via=subsmap.com" target="_blank">
+          <Image
+            src="/home-lit.svg"
+            alt="SubsMap Banner"
+            width={1200}
+            height={630}
+            className="w-full h-auto rounded-sm mt-4"
+          />
+        </Link>
       </div>
       <div
         ref={ref}
