@@ -13,10 +13,10 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <>
+    <div className="mt-4">
       <Calendar key={`calendar-${refreshKey}`} />
       <InsertSubForm onNewSubscription={handleDataChange} />
       <SubTable key={`subtable-${refreshKey}`} onDelete={handleDataChange} />
-    </>
+    </div>
   )
 }
