@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { TrendingDown, TrendingUp, ArrowRight, Globe, Twitter, Github, Plus, Edit, Trash2 } from "lucide-react"
+import { TrendingDown, TrendingUp, ArrowRight, Globe, Twitter, Github, Plus, Edit, Trash2, Calendar, DollarSign, CoinsIcon } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -22,6 +22,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link';
 import { Skeleton } from "@/components/ui/skeleton";
+import MonthlyCalendar from '@/components/business/MonthlyCalendar';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface Startup {
   id: string;
@@ -112,6 +119,39 @@ const BusinessDashboard: React.FC = () => {
           </Button>
         </div>
       </div>
+      <Card className='rounded-md mb-4 pl-4 pr-4'>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1" className="border-none">
+              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
+                <div className="flex items-center">
+                  <Calendar className="mr-2 size-4" />
+                  Monthly Calendar
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-2 pb-4">
+                <div className="bg-gray-900 rounded-lg p-4">
+                  <MonthlyCalendar />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2" className="border-none">
+              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
+                <div className="flex items-center">
+                  <DollarSign className="mr-2 size-4" />
+                  Earnings
+                </div>
+              </AccordionTrigger>
+            </AccordionItem>
+            <AccordionItem value="item-3" className="border-none">
+              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
+                <div className="flex items-center">
+                  <CoinsIcon className="mr-2 size-4" />
+                  Expenses
+                </div>
+              </AccordionTrigger>
+            </AccordionItem>
+          </Accordion>
+      </Card>
 
       {/* Aggregate Summary Card */}
       {/* ... (keep the existing aggregate summary card code) ... */}
