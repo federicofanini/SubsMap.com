@@ -28,7 +28,7 @@ const RevolutSponsor: React.FC<RevolutSponsorProps> = ({ position }) => {
         height={20} 
         className="mb-2 mt-2"
       />
-      <p className="text-white text-xs font-semibold mb-0.5">Manage your subscriptions with ease. Take care of your privacy ✅</p>
+      <p className="text-white text-xs font-semibold mb-0.5">Buy online with ease. Take care of your privacy ✅</p>
       <div className="flex gap-2 mb-2">
         <Button size="sm" variant="outline" className="text-xs px-2">
           <Link href="/dashboard/revolut">
