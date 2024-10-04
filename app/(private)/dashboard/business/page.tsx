@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { TrendingDown, TrendingUp } from "lucide-react"
+import { TrendingDown, TrendingUp, ArrowRight } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -19,6 +19,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import Link from 'next/link';
 
 // Mock data for startups
 const mockStartups = [
@@ -47,7 +49,7 @@ const BusinessDashboard: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto bg-black text-white p-4 rounded-lg mt-4">
       <h2 className="text-2xl font-bold mb-4">Startup Portfolio</h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {mockStartups.map((startup) => {
           const chartData = startup.revenue.map((r, i) => ({
             month: months[i],
@@ -112,7 +114,7 @@ const BusinessDashboard: React.FC = () => {
                   </AreaChart>
                 </ChartContainer>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-2">
                 <div className="flex w-full justify-between items-start text-xs font-bold">
                   <div className="flex items-center gap-2 font-medium text-green-500">
                     <TrendingUp className="h-4 w-4 text-green-400" />
@@ -123,7 +125,16 @@ const BusinessDashboard: React.FC = () => {
                     Expenses: ${lastMonthExpenses}k
                   </div>
                 </div>
+                
               </CardFooter>
+              <div className="flex justify-end pl-5 pr-5 pb-2">
+                <Button variant="outline" className="w-full">
+                  <Link href={`/dashboard/business/${startup.id}`} className="flex items-center gap-2">
+                    Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </Card>
           );
         })}
