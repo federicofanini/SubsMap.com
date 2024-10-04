@@ -39,11 +39,13 @@ model Subscription {
 model Startup {
   id          String   @id @default(uuid())
   name        String
-  description String
+  description String?
   imageUrl    String?
   websiteUrl  String?
   twitterUrl  String?
   githubUrl   String?
+  revenueSource String?
+  apiKey        String?
   userId    String
 }
 
