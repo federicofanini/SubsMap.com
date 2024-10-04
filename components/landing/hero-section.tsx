@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import Sponsor from "@/components/sub/Sponsor";
+import RevolutSponsor from "../sub/RevolutSponsor";
 
 export default function HeroSection() {
   const ref = useRef(null);
@@ -62,17 +63,6 @@ export default function HeroSection() {
         <Link href="/dashboard">Get Started for FREE </Link>
         <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
       </Button>
-      <div className="max-w-lg mx-auto">
-        <Link href="https://litlyx.com/?via=subsmap.com" target="_blank">
-          <Image
-            src="/home-lit.svg"
-            alt="SubsMap Banner"
-            width={1200}
-            height={630}
-            className="w-full h-auto rounded-sm mt-4"
-          />
-        </Link>
-      </div>
       <div
         ref={ref}
         className="relative mt-[8rem] animate-fade-up opacity-0 [--animation-delay:400ms] [perspective:2000px] after:absolute after:inset-0 after:z-50 after:[background:linear-gradient(to_top,hsl(var(--background))_30%,transparent)]"
@@ -105,8 +95,16 @@ export default function HeroSection() {
           />
         </div>
       </div>
-      <div className="max-w-lg mx-auto mt-8">
-        <Sponsor position="bottom" />
+      <div className="max-w-lg mx-auto">
+        <Link href="https://litlyx.com/?via=subsmap.com" target="_blank">
+          <Image
+            src="/home-lit.svg"
+            alt="SubsMap Banner"
+            width={1200}
+            height={630}
+            className="w-full h-auto rounded-sm mt-4"
+          />
+        </Link>
       </div>
       <div className="max-w-lg mx-auto mt-8">
         <Sponsor position="bottom" />

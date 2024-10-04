@@ -13,6 +13,7 @@ import CalendarSkeleton from '@/components/sub/CalendarSkelethon';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import Sponsor from '@/components/sub/Sponsor';
 import { Separator } from '../ui/separator';
+import RevolutSponsor from './RevolutSponsor';
 
 type Subscription = {
   id: string;
@@ -173,7 +174,7 @@ const Calendar: React.FC = () => {
           </Card>
         ))}
       </div>
-      <Sponsor position="bottom" />
+      <RevolutSponsor position="bottom" />
     </div>
   );
 };
