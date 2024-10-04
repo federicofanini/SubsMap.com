@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { TrendingUp } from "lucide-react"
+import { TrendingDown, TrendingUp } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -18,15 +18,16 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { Badge } from "@/components/ui/badge"
 
 // Mock data for startups
 const mockStartups = [
-  { id: 1, name: "TechInnovate", revenue: [10, 20, 15, 25, 30], expenses: [5, 10, 8, 12, 15] },
-  { id: 2, name: "GreenEnergy", revenue: [5, 15, 25, 20, 35], expenses: [3, 8, 12, 10, 18] },
-  { id: 3, name: "HealthTech", revenue: [15, 25, 20, 30, 40], expenses: [8, 12, 10, 15, 20] },
-  { id: 4, name: "AIAssist", revenue: [20, 30, 25, 35, 45], expenses: [10, 15, 12, 18, 22] },
-  { id: 5, name: "FinTech", revenue: [25, 35, 30, 40, 50], expenses: [12, 18, 15, 20, 25] },
-  { id: 6, name: "EduTech", revenue: [8, 18, 28, 23, 38], expenses: [4, 9, 14, 11, 19] },
+  { id: 1, name: "TechInnovate", revenue: [10, 20, 15, 25, 30], expenses: [5, 10, 8, 12, 15], mrr: 30 },
+  { id: 2, name: "GreenEnergy", revenue: [5, 15, 25, 20, 35], expenses: [3, 8, 12, 10, 18], mrr: 35 },
+  { id: 3, name: "HealthTech", revenue: [15, 25, 20, 30, 40], expenses: [8, 12, 10, 15, 20], mrr: 40 },
+  { id: 4, name: "AIAssist", revenue: [20, 30, 25, 35, 45], expenses: [10, 15, 12, 18, 22], mrr: 45 },
+  { id: 5, name: "FinTech", revenue: [25, 35, 30, 40, 50], expenses: [12, 18, 15, 20, 25], mrr: 50 },
+  { id: 6, name: "EduTech", revenue: [8, 18, 28, 23, 38], expenses: [4, 9, 14, 11, 19], mrr: 38 },
 ];
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May"];
@@ -34,11 +35,11 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May"];
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-2))",
   },
   expenses: {
     label: "Expenses",
-    color: "hsl(var(--chart-2))",
+    color: "#fa4343d9",
   },
 } satisfies ChartConfig
 
@@ -58,9 +59,14 @@ const BusinessDashboard: React.FC = () => {
           const lastMonthExpenses = startup.expenses[startup.expenses.length - 1];
 
           return (
-            <Card key={startup.id} className="bg-gray-900 border-gray-800 rounded-md">
+            <Card key={startup.id} className="bg-gray-900 border-gray-800 rounded-md relative">
               <CardHeader>
-                <CardTitle>{startup.name}</CardTitle>
+                <CardTitle className="flex justify-between items-center">
+                  <span>{startup.name}</span>
+                  <Badge variant="outline" className="font-bold">
+                    💰 MRR: ${startup.mrr}k
+                  </Badge>
+                </CardTitle>
                 <CardDescription>
                   Financial overview for the last 5 months
                 </CardDescription>
@@ -107,12 +113,13 @@ const BusinessDashboard: React.FC = () => {
                 </ChartContainer>
               </CardContent>
               <CardFooter>
-                <div className="flex w-full justify-between items-start text-sm">
-                  <div className="flex items-center gap-2 font-medium">
-                    Revenue: ${lastMonthRevenue}k
+                <div className="flex w-full justify-between items-start text-xs font-bold">
+                  <div className="flex items-center gap-2 font-medium text-green-500">
                     <TrendingUp className="h-4 w-4 text-green-400" />
+                    Revenue: ${lastMonthRevenue}k
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-red-400">
+                    <TrendingDown className="h-4 w-4 text-red-400" />
                     Expenses: ${lastMonthExpenses}k
                   </div>
                 </div>
