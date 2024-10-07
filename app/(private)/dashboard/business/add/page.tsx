@@ -184,7 +184,7 @@ export default function AddStartupPage() {
                     defaultValue={field.value}
                     className="flex flex-row space-x-2 w-full"
                   >
-                    {['stripe', 'lemon'].map((source) => (
+                    {['stripe'].map((source) => (
                       <Card key={source} className="flex-1 flex items-center justify-center p-4 cursor-pointer hover:bg-gray-800 rounded-md">
                         <RadioGroupItem value={source} id={source} className="mr-2" />
                         <Label htmlFor={source} className="capitalize">{source}</Label>

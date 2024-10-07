@@ -29,11 +29,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface Startup {
   id: string;
   name: string;
   description: string;
+  imageUrl: string | null;
   websiteUrl: string | null;
   twitterUrl: string | null;
   githubUrl: string | null;
@@ -215,6 +217,10 @@ const BusinessDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
+                      <Avatar className="size-5">
+                        <AvatarImage src={startup.imageUrl || undefined} alt={startup.name} />
+                        <AvatarFallback>{startup.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
                       <span className="font-bold text-sm">{startup.name}</span>
                       {startup.websiteUrl && (
                         <a href={startup.websiteUrl} target="_blank" rel="noopener noreferrer">
