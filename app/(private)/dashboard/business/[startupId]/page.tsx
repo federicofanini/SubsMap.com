@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from "@/components/ui/card";
 import { Globe, Twitter, Github,} from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StartupSub } from "@/components/business/StartupSub";
 import { Separator } from "@/components/ui/separator";
 import { BrandIcons } from "@/components/sub/BrandIcons";
+import StartupSubTable from "@/components/business/StartupSubTable";
 
 interface Startup {
   id: string;
@@ -64,49 +65,50 @@ export default function StartupDetailsPage() {
   const [stripeData, setStripeData] = useState<StripeData | null>(null);
   const [monthlyExpenses, setMonthlyExpenses] = useState<MonthlyExpenses | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [newSubscriptionAdded, setNewSubscriptionAdded] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const startupResponse = await fetch('/api/startups/startupList');
+      if (!startupResponse.ok) {
+        throw new Error('Failed to fetch startups');
+      }
+      const startups: Startup[] = await startupResponse.json();
+      const foundStartup = startups.find(s => s.id === startupId);
+      setStartup(foundStartup || null);
+
+      const stripeResponse = await fetch(`/api/startups/statsCard/stripe`, {
+        headers: {
+          'X-Startup-Id': startupId as string
+        }
+      });
+      if (stripeResponse.ok) {
+        const data: StripeData = await stripeResponse.json();
+        setStripeData(data);
+      }
+
+      const expensesResponse = await fetch(`/api/startups/subscriptions/expensesChart`, {
+        headers: {
+          'X-Startup-Id': startupId as string
+        }
+      });
+      if (expensesResponse.ok) {
+        const expensesData: MonthlyExpenses = await expensesResponse.json();
+        setMonthlyExpenses(expensesData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [startupId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const startupResponse = await fetch('/api/startups/startupList');
-        if (!startupResponse.ok) {
-          throw new Error('Failed to fetch startups');
-        }
-        const startups: Startup[] = await startupResponse.json();
-        const foundStartup = startups.find(s => s.id === startupId);
-        setStartup(foundStartup || null);
-
-        const stripeResponse = await fetch(`/api/startups/statsCard/stripe`, {
-          headers: {
-            'X-Startup-Id': startupId as string
-          }
-        });
-        if (stripeResponse.ok) {
-          const data: StripeData = await stripeResponse.json();
-          setStripeData(data);
-        }
-
-        const expensesResponse = await fetch(`/api/startups/subscriptions/expensesChart`, {
-          headers: {
-            'X-Startup-Id': startupId as string
-          }
-        });
-        if (expensesResponse.ok) {
-          const expensesData: MonthlyExpenses = await expensesResponse.json();
-          setMonthlyExpenses(expensesData);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     if (startupId) {
       fetchData();
     }
-  }, [startupId]);
+  }, [startupId, fetchData]);
 
   const generateChartData = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -118,6 +120,15 @@ export default function StartupDetailsPage() {
   };
 
   const chartData = generateChartData();
+
+  const handleNewSubscription = () => {
+    setNewSubscriptionAdded(prev => !prev);
+    fetchData();
+  };
+
+  const handleSubscriptionDelete = () => {
+    fetchData();
+  };
 
   if (isLoading) {
     return (
@@ -176,8 +187,8 @@ export default function StartupDetailsPage() {
                 </a>
               )}
             </div>
-            <Badge variant="outline" className="font-bold">
-              MRR:
+            <Badge variant="outline" className="font-bold gap-2">
+              MRR: {stripeData?.sales.total ? (stripeData.sales.total / 12).toFixed(2) : 0} {stripeData?.sales.currency}
             </Badge>
           </CardTitle>
           <CardDescription className="text-xs font-semibold">{startup.description}</CardDescription>
@@ -186,7 +197,7 @@ export default function StartupDetailsPage() {
         <CardContent>
           
           <h3 className="text-xs font-semibold mb-2 text-muted-foreground flex items-center gap-1">
-            <BrandIcons.Stripe.icon className="size-5" />
+            
             Financials
           </h3>
           <ChartContainer config={chartConfig}>
@@ -269,9 +280,13 @@ export default function StartupDetailsPage() {
             </div>
           )}
         </CardContent>
+        <CardFooter className="flex justify-center items-center gap-2 text-[9px] font-semibold text-muted-foreground">
+          Powered by <BrandIcons.Stripe.icon className="size-6" />
+        </CardFooter>
       </Card>
 
-      <StartupSub onNewSubscription={() => {}} startupId={startupId as string} />
+      <StartupSub onNewSubscription={handleNewSubscription} startupId={startupId as string} />
+      <StartupSubTable startupId={startupId as string} onDelete={handleSubscriptionDelete} newSubscriptionAdded={newSubscriptionAdded} />
 
     </div>
   );

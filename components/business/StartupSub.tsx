@@ -259,11 +259,8 @@ export function StartupSub({ onNewSubscription, startupId }: StartupSubFormProps
           </form>
         </Form>
       </Card>
-      <StartupSubTable 
-        startupId={startupId} 
-        onDelete={() => {}} 
-        newSubscriptionAdded={newSubscriptionAdded} 
-      />
+      
+  
     </>
   )
 }
