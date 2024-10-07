@@ -184,6 +184,20 @@ const BusinessDashboard: React.FC = () => {
               </div>
             </Card>
           ))
+        ) : startups.length === 0 ? (
+          <Card className="col-span-full bg-gray-900 border-gray-800 border-dashed rounded-md relative p-8 flex flex-col items-center justify-center">
+            <Plus className="h-12 w-12 text-gray-500 mb-4" />
+            <CardTitle className="text-xl font-bold text-gray-500 mb-2">No startups yet</CardTitle>
+            <CardDescription className="text-gray-400 text-center mb-4">
+              Add your first startup to get started
+            </CardDescription>
+            <Link href="/dashboard/business/add">
+              <Button variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Startup
+              </Button>
+            </Link>
+          </Card>
         ) : (
           startups.map((startup) => {
             const mockData = mockFinancialData(startup.id);
