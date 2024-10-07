@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { TrendingUp, Globe, Twitter, Github, Trash2, Edit } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -46,10 +46,16 @@ interface StripeData {
   }[];
 }
 
+interface Subscription {
+  amount: number;
+  currency: string;
+  isMonthly: boolean;
+}
+
 const chartConfig = {
   sales: {
     label: "Sales",
-    color: "hsl(var(--chart-1))",
+    color: "#22c55e", // green-500
   },
   expenses: {
     label: "Expenses",
@@ -61,6 +67,7 @@ export default function StartupDetailsPage() {
   const { startupId } = useParams();
   const [startup, setStartup] = useState<Startup | null>(null);
   const [stripeData, setStripeData] = useState<StripeData | null>(null);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -83,6 +90,12 @@ export default function StartupDetailsPage() {
         if (stripeResponse.ok) {
           const data: StripeData = await stripeResponse.json();
           setStripeData(data);
+        }
+
+        const subscriptionsResponse = await fetch(`/api/startups/subscriptions/list?startupId=${startupId}`);
+        if (subscriptionsResponse.ok) {
+          const subscriptionsData: Subscription[] = await subscriptionsResponse.json();
+          setSubscriptions(subscriptionsData);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -110,7 +123,16 @@ export default function StartupDetailsPage() {
     return months;
   };
 
-  const chartData = stripeData?.monthlySales?.slice(-12) || generateLast12MonthsData();
+  const calculateMonthlyExpenses = () => {
+    return subscriptions.reduce((total, sub) => {
+      return total + sub.amount;
+    }, 0);
+  };
+
+  const chartData = stripeData?.monthlySales?.slice(-12).map(data => ({
+    ...data,
+    expenses: calculateMonthlyExpenses()
+  })) || generateLast12MonthsData();
 
   const formatMonth = (value: string) => {
     const date = new Date(value);
@@ -179,17 +201,18 @@ export default function StartupDetailsPage() {
               MRR:
             </Badge>
           </CardTitle>
+          <CardDescription className="text-xs font-semibold">{startup.description}</CardDescription>
+          <Separator className="mb-2 mt-2" />
         </CardHeader>
         <CardContent>
-          <p className="text-sm mb-4">{startup.description}</p>
-          <Separator className="mb-4" />
+          
           <h3 className="text-xs font-semibold mb-2 text-muted-foreground flex items-center gap-1">
             <BrandIcons.Stripe.icon className="size-5" />
-            Revenues
+            Financials
           </h3>
           <ChartContainer config={chartConfig}>
             <ResponsiveContainer width="100%" height={200}>
-              <AreaChart
+              <BarChart
                 data={chartData}
                 margin={{
                   left: 0,
@@ -210,23 +233,17 @@ export default function StartupDetailsPage() {
                   cursor={false}
                   content={<ChartTooltipContent indicator="line" />}
                 />
-                <Area
+                <Bar
                   dataKey="expenses"
-                  type="natural"
                   fill={chartConfig.expenses.color}
-                  fillOpacity={0.4}
-                  stroke={chartConfig.expenses.color}
-                  stackId="a"
+                  radius={4}
                 />
-                <Area
+                <Bar
                   dataKey="sales"
-                  type="natural"
                   fill={chartConfig.sales.color}
-                  fillOpacity={0.4}
-                  stroke={chartConfig.sales.color}
-                  stackId="a"
+                  radius={4}
                 />
-              </AreaChart>
+              </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
           {stripeData && (
