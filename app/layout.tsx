@@ -31,11 +31,6 @@ export default function RootLayout({
         <Script id="plausible-setup">
           {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
         </Script>
-        <Script
-          defer
-          data-project="66fd56f4ade5430efb2d5ab9"
-          src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"
-        />
       </head>
       <body
         className={cn(
