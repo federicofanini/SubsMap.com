@@ -3,16 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { TrendingUp, Globe, Twitter, Github, Trash2, Edit } from 'lucide-react';
+import { Globe, Twitter, Github,} from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Link from 'next/link';
 import { Skeleton } from "@/components/ui/skeleton";
 import { StartupSub } from "@/components/business/StartupSub";
-import StartupSubTable from "@/components/business/StartupSubTable";
 import { Separator } from "@/components/ui/separator";
 import { BrandIcons } from "@/components/sub/BrandIcons";
 
@@ -46,10 +43,8 @@ interface StripeData {
   }[];
 }
 
-interface Subscription {
-  amount: number;
-  currency: string;
-  isMonthly: boolean;
+interface MonthlyExpenses {
+  [key: string]: number;
 }
 
 const chartConfig = {
@@ -67,7 +62,7 @@ export default function StartupDetailsPage() {
   const { startupId } = useParams();
   const [startup, setStartup] = useState<Startup | null>(null);
   const [stripeData, setStripeData] = useState<StripeData | null>(null);
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [monthlyExpenses, setMonthlyExpenses] = useState<MonthlyExpenses | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -92,10 +87,14 @@ export default function StartupDetailsPage() {
           setStripeData(data);
         }
 
-        const subscriptionsResponse = await fetch(`/api/startups/subscriptions/list?startupId=${startupId}`);
-        if (subscriptionsResponse.ok) {
-          const subscriptionsData: Subscription[] = await subscriptionsResponse.json();
-          setSubscriptions(subscriptionsData);
+        const expensesResponse = await fetch(`/api/startups/subscriptions/expensesChart`, {
+          headers: {
+            'X-Startup-Id': startupId as string
+          }
+        });
+        if (expensesResponse.ok) {
+          const expensesData: MonthlyExpenses = await expensesResponse.json();
+          setMonthlyExpenses(expensesData);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -109,36 +108,16 @@ export default function StartupDetailsPage() {
     }
   }, [startupId]);
 
-  const generateLast12MonthsData = () => {
-    const months = [];
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      months.push({
-        month: date.toLocaleString('default', { month: 'short', year: 'numeric' }),
-        sales: 0,
-        expenses: 0
-      });
-    }
-    return months;
+  const generateChartData = () => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months.map(month => ({
+      month,
+      sales: stripeData?.monthlySales?.find(s => s.month.includes(month))?.sales || 0,
+      expenses: monthlyExpenses?.[month] || 0
+    }));
   };
 
-  const calculateMonthlyExpenses = () => {
-    return subscriptions.reduce((total, sub) => {
-      return total + sub.amount;
-    }, 0);
-  };
-
-  const chartData = stripeData?.monthlySales?.slice(-12).map(data => ({
-    ...data,
-    expenses: calculateMonthlyExpenses()
-  })) || generateLast12MonthsData();
-
-  const formatMonth = (value: string) => {
-    const date = new Date(value);
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return monthNames[date.getMonth()];
-  };
+  const chartData = generateChartData();
 
   if (isLoading) {
     return (
@@ -227,7 +206,6 @@ export default function StartupDetailsPage() {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => formatMonth(value)}
                 />
                 <ChartTooltip
                   cursor={false}
