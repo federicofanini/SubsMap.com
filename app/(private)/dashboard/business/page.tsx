@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { TrendingDown, TrendingUp, ArrowRight, Globe, Twitter, Github, Plus, Edit, Trash2, Calendar, DollarSign, CoinsIcon } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
 
 import {
   Card,
@@ -30,6 +30,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
 
 interface Startup {
   id: string;
@@ -41,12 +42,28 @@ interface Startup {
   githubUrl: string | null;
 }
 
-const months = ["Jan", "Feb", "Mar", "Apr", "May"];
+interface StripeData {
+  sales: {
+    total: number;
+    currency: string;
+    period: string;
+  };
+  monthlySales: {
+    month: string;
+    sales: number;
+  }[];
+}
+
+interface ExpenseData {
+  [key: string]: number;
+}
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "hsl(var(--chart-2))",
+  sales: {
+    label: "Sales",
+    color: "#22c55e", // green-500
   },
   expenses: {
     label: "Expenses",
@@ -56,6 +73,8 @@ const chartConfig = {
 
 const BusinessDashboard: React.FC = () => {
   const [startups, setStartups] = useState<Startup[]>([]);
+  const [stripeData, setStripeData] = useState<{ [key: string]: StripeData | null }>({});
+  const [expenseData, setExpenseData] = useState<{ [key: string]: ExpenseData }>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -68,6 +87,38 @@ const BusinessDashboard: React.FC = () => {
         }
         const data = await response.json();
         setStartups(data);
+
+        // Fetch Stripe data and expenses for each startup
+        const dataPromises = data.map(async (startup: Startup) => {
+          const stripeResponse = await fetch(`/api/startups/statsCard/stripe`, {
+            headers: {
+              'X-Startup-Id': startup.id
+            }
+          });
+          const expenseResponse = await fetch(`/api/startups/subscriptions/expensesChart`, {
+            headers: {
+              'X-Startup-Id': startup.id
+            }
+          });
+          
+          if (!stripeResponse.ok || !expenseResponse.ok) {
+            console.error(`Failed to fetch data for startup ${startup.id}`);
+            return [startup.id, null, null];
+          }
+          
+          const stripeData = await stripeResponse.json();
+          const expenseData = await expenseResponse.json();
+          console.log(stripeData, expenseData)
+          
+          return [startup.id, stripeData, expenseData];
+        });
+
+        const results = await Promise.all(dataPromises);
+        const stripeDataMap = Object.fromEntries(results.map(([id, stripe]) => [id, stripe]));
+        const expenseDataMap = Object.fromEntries(results.map(([id, , expense]) => [id, expense]));
+        
+        setStripeData(stripeDataMap);
+        setExpenseData(expenseDataMap);
       } catch (error) {
         console.error('Error fetching startups:', error);
       } finally {
@@ -78,23 +129,26 @@ const BusinessDashboard: React.FC = () => {
     fetchStartups();
   }, []);
 
-  // Mock data for financial information
-  const mockFinancialData = (id: string) => ({
-    revenue: [10, 20, 15, 25, 30],
-    expenses: [5, 10, 8, 12, 15],
-    mrr: 30,
-  });
+  const calculateMRR = (startupId: string) => {
+    const stripe = stripeData[startupId];
+    if (!stripe || !stripe.sales || !stripe.sales.total) return 0;
+
+    const totalRevenue = stripe.sales.total;
+    const mrr = totalRevenue / 12;
+    return parseFloat(mrr.toFixed(2));
+  };
 
   // Calculate aggregate data
-  const aggregateData = months.map((_, index) => ({
-    month: months[index],
-    revenue: startups.reduce((sum, startup) => sum + mockFinancialData(startup.id).revenue[index], 0),
-    expenses: startups.reduce((sum, startup) => sum + mockFinancialData(startup.id).expenses[index], 0),
-  }));
-
-  const totalMRR = startups.reduce((sum, startup) => sum + mockFinancialData(startup.id).mrr, 0);
-  const lastMonthTotalRevenue = aggregateData[aggregateData.length - 1].revenue;
-  const lastMonthTotalExpenses = aggregateData[aggregateData.length - 1].expenses;
+  const aggregateData = {
+    totalRevenue: startups.reduce((sum, startup) => {
+      const stripe = stripeData[startup.id];
+      return sum + (stripe?.sales?.total || 0);
+    }, 0),
+    totalExpenses: startups.reduce((sum, startup) => {
+      const expense = expenseData[startup.id];
+      return sum + (expense ? Object.values(expense).reduce((a, b) => a + b, 0) : 0);
+    }, 0),
+  };
 
   return (
     <div className="max-w-2xl mx-auto bg-black text-white p-4 rounded-lg mt-4">
@@ -121,42 +175,28 @@ const BusinessDashboard: React.FC = () => {
           </Button>
         </div>
       </div>
-      <Card className='rounded-md mb-4 pl-4 pr-4'>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1" className="border-none">
-              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
-                <div className="flex items-center">
-                  <Calendar className="mr-2 size-4" />
-                  Monthly Calendar
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pt-2 pb-4">
-                <div className="bg-gray-900 rounded-lg p-4">
-                  <MonthlyCalendar />
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2" className="border-none">
-              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
-                <div className="flex items-center">
-                  <DollarSign className="mr-2 size-4" />
-                  Earnings
-                </div>
-              </AccordionTrigger>
-            </AccordionItem>
-            <AccordionItem value="item-3" className="border-none">
-              <AccordionTrigger className="py-4 text-sm font-semibold transition-colors">
-                <div className="flex items-center">
-                  <CoinsIcon className="mr-2 size-4" />
-                  Expenses
-                </div>
-              </AccordionTrigger>
-            </AccordionItem>
-          </Accordion>
-      </Card>
 
       {/* Aggregate Summary Card */}
-      {/* ... (keep the existing aggregate summary card code) ... */}
+      <Card className="bg-gray-900 border-gray-800 rounded-md mb-4">
+        <CardHeader>
+          <CardTitle className="flex justify-center items-center gap-4 sm:gap-44">
+            Portfolio Summary
+            <Badge variant="secondary">💰 MRR: ${(aggregateData.totalRevenue / 12).toFixed(2)}</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p className="text-sm font-semibold text-gray-400">Total Revenue</p>
+              <p className="text-2xl font-bold text-green-500">${aggregateData.totalRevenue.toFixed(2)}</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-400">Total Expenses</p>
+              <p className="text-2xl font-bold text-red-500">-${aggregateData.totalExpenses.toFixed(2)}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {isLoading ? (
@@ -202,15 +242,15 @@ const BusinessDashboard: React.FC = () => {
           </Card>
         ) : (
           startups.map((startup) => {
-            const mockData = mockFinancialData(startup.id);
-            const chartData = mockData.revenue.map((r, i) => ({
-              month: months[i],
-              revenue: r,
-              expenses: mockData.expenses[i],
-            }));
+            const stripe = stripeData[startup.id];
+            const expense = expenseData[startup.id];
+            const mrr = calculateMRR(startup.id);
 
-            const lastMonthRevenue = mockData.revenue[mockData.revenue.length - 1];
-            const lastMonthExpenses = mockData.expenses[mockData.expenses.length - 1];
+            const chartData = months.map((month) => ({
+              month,
+              sales: stripe?.monthlySales?.find(s => s.month.includes(month))?.sales || 0,
+              expenses: expense?.[month] || 0,
+            }));
 
             return (
               <Card key={startup.id} className="bg-gray-900 border-gray-800 rounded-md relative">
@@ -239,75 +279,84 @@ const BusinessDashboard: React.FC = () => {
                       )}
                     </div>
                     <Badge variant="outline" className="font-bold">
-                      💰 MRR: ${mockData.mrr}k
+                      MRR: ${mrr}
                     </Badge>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs font-semibold">
                     {startup.description}
                   </CardDescription>
+                  <Separator className="mb-2 mt-2" />
                 </CardHeader>
                 <CardContent>
+                  <h3 className="text-xs font-semibold mb-2 text-muted-foreground">
+                    Revenues & Expenses
+                  </h3>
                   <ChartContainer config={chartConfig}>
-                    <AreaChart
-                      accessibilityLayer
-                      data={chartData}
-                      margin={{
-                        left: 12,
-                        right: 12,
-                      }}
-                    >
-                      <CartesianGrid vertical={false} />
-                      <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        tickFormatter={(value) => value.slice(0, 3)}
-                      />
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent indicator="dot" />}
-                      />
-                      <Area
-                        dataKey="expenses"
-                        type="natural"
-                        fill={chartConfig.expenses.color}
-                        fillOpacity={0.4}
-                        stroke={chartConfig.expenses.color}
-                        stackId="a"
-                      />
-                      <Area
-                        dataKey="revenue"
-                        type="natural"
-                        fill={chartConfig.revenue.color}
-                        fillOpacity={0.4}
-                        stroke={chartConfig.revenue.color}
-                        stackId="a"
-                      />
-                    </AreaChart>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <BarChart
+                        data={chartData}
+                        margin={{
+                          left: 0,
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                        }}
+                      >
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                          dataKey="month"
+                          tickLine={false}
+                          axisLine={false}
+                          tickMargin={8}
+                        />
+                        <ChartTooltip
+                          cursor={false}
+                          content={<ChartTooltipContent indicator="line" />}
+                        />
+                        <Bar
+                          dataKey="expenses"
+                          fill={chartConfig.expenses.color}
+                          radius={4}
+                        />
+                        <Bar
+                          dataKey="sales"
+                          fill={chartConfig.sales.color}
+                          radius={4}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </ChartContainer>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2">
-                  <div className="flex w-full justify-between items-start text-xs font-bold">
-                    <div className="flex items-center gap-2 font-medium text-green-500">
-                      <TrendingUp className="h-4 w-4 text-green-400" />
-                      Revenue: ${lastMonthRevenue}k
-                    </div>
-                    <div className="flex items-center gap-2 text-red-400">
-                      <TrendingDown className="h-4 w-4 text-red-400" />
-                      Expenses: ${lastMonthExpenses}k
-                    </div>
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <Card className="p-2 bg-gray-800 rounded-md">
+                      <CardHeader className="p-0">
+                        <CardTitle className="text-xs font-semibold text-muted-foreground">Total Revenue</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0 pt-1">
+                        <p className="text-sm font-bold">
+                          ${stripe?.sales?.total || 0} {stripe?.sales?.currency}
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card className="p-2 bg-gray-800 rounded-md">
+                      <CardHeader className="p-0">
+                        <CardTitle className="text-xs font-semibold text-muted-foreground">Total Expenses</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0 pt-1">
+                        <p className="text-sm font-bold">
+                          ${expense ? Object.values(expense).reduce((a, b) => a + b, 0) : 0}
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
-                  
-                </CardFooter>
-                <div className="flex justify-end pl-5 pr-5 pb-2">
+                </CardContent>
+                <CardFooter>
                   <Button variant="outline" className="w-full">
                     <Link href={`/dashboard/business/${startup.id}`} className="flex items-center gap-2">
                       Details
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                </div>
+                </CardFooter>
               </Card>
             );
           })
