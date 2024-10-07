@@ -21,6 +21,7 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import Link from 'next/link'
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -201,7 +202,9 @@ export default function AddStartupPage() {
             name="apiKey"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs text-muted-foreground font-semibold">API Key</FormLabel>
+                <FormLabel className="text-xs text-muted-foreground font-semibold">
+                  Create your Stripe Api Key <Link href="https://dashboard.stripe.com/apikeys/create?name=SubsMap.com&permissions%5B%5D=rak_charge_read&permissions%5B%5D=rak_bucket_connect_read&permissions%5B%5D=rak_balance_read" className="text-blue-500 hover:text-blue-600 underline underline-offset-2" target="_blank">here</Link>. 🚨 Do <span className="font-bold underline underline-offset-2">NOT</span> change permissions.
+                </FormLabel>
                 <FormControl>
                   <Input {...field} className="bg-gray-800 text-white" placeholder={`Enter ${revenueSource} API key`} />
                 </FormControl>

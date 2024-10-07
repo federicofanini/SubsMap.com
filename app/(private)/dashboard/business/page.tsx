@@ -343,7 +343,7 @@ const BusinessDashboard: React.FC = () => {
                       </CardHeader>
                       <CardContent className="p-0 pt-1">
                         <p className="text-sm font-bold">
-                          ${expense ? Object.values(expense).reduce((a, b) => a + b, 0) : 0}
+                          -${expense ? Object.values(expense).reduce((a, b) => a + b, 0) : 0}
                         </p>
                       </CardContent>
                     </Card>
