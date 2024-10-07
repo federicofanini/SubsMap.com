@@ -197,8 +197,8 @@ export default function StartupDetailsPage() {
         <CardContent>
           
           <h3 className="text-xs font-semibold mb-2 text-muted-foreground flex items-center gap-1">
-            
-            Financials
+            <BrandIcons.Stripe.icon className="size-6" />
+            Revenues & Expenses
           </h3>
           <ChartContainer config={chartConfig}>
             <ResponsiveContainer width="100%" height={200}>
@@ -280,9 +280,6 @@ export default function StartupDetailsPage() {
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex justify-center items-center gap-2 text-[9px] font-semibold text-muted-foreground">
-          Powered by <BrandIcons.Stripe.icon className="size-6" />
-        </CardFooter>
       </Card>
 
       <StartupSub onNewSubscription={handleNewSubscription} startupId={startupId as string} />
