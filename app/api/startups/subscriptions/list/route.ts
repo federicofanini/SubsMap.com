@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from '@/lib/db';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(req: Request) {
   try {
@@ -46,6 +47,28 @@ export async function GET(req: Request) {
       isAnnual: sub.annual
     }));
 
+    // Set up real-time subscription
+    const realtimeClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const channel = realtimeClient
+      .channel('startup-subscriptions')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'StartupSubscription',
+          filter: `startupId=eq.${startupId} AND userId=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('Change received in startup subscriptions!', payload);
+        }
+      )
+      .subscribe();
+
     return NextResponse.json(formattedSubscriptions);
   } catch (error) {
     console.error('Error fetching startup subscriptions:', error);
@@ -54,4 +77,3 @@ export async function GET(req: Request) {
     await prisma.$disconnect();
   }
 }
-

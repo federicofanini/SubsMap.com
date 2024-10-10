@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(request: Request) {
   try {
@@ -91,6 +92,28 @@ export async function GET(request: Request) {
       },
       monthlySales: monthlySales,
     };
+
+    // Set up real-time subscription
+    const realtimeClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const channel = realtimeClient
+      .channel('stripe-stats')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'Startup',
+          filter: `id=eq.${startupId} AND userId=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('Change received!', payload);
+        }
+      )
+      .subscribe();
 
     return NextResponse.json(response);
   } catch (error) {
