@@ -27,6 +27,7 @@ const demoPrices = [
       "Basic reminders",
     ],
     yearlyPrice: 0,
+    anchorPrice: 2900,
     isMostPopular: false,
     interval: "free" as Interval,
   },
@@ -41,6 +42,7 @@ const demoPrices = [
       "Access to basic AI tools",
     ],
     yearlyPrice: 2900,
+    anchorPrice: 4900,
     isMostPopular: false,
     interval: "year" as Interval,
   },
@@ -56,6 +58,7 @@ const demoPrices = [
       "Custom integrations",
     ],
     yearlyPrice: 4900,
+    anchorPrice: 8900,
     isMostPopular: true,
     interval: "lifetime" as Interval,
   },
@@ -146,8 +149,11 @@ export default function PricingSection() {
                   delay: 0.1 + idx * 0.05,
                   ease: [0.21, 0.47, 0.32, 0.98],
                 }}
-                className="flex flex-row gap-1"
+                className="flex flex-row gap-1 items-center"
               >
+                <span className="text-xl font-semibold line-through text-gray-500">
+                  ${toHumanPrice(price.anchorPrice, 0)}
+                </span>
                 <span className="text-4xl font-bold text-black dark:text-white">
                   {price.yearlyPrice === 0 ? (
                     "Free"

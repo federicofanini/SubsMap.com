@@ -1,21 +1,30 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { BorderBeam } from "@/components/magicui/border-beam";
-import TextShimmer from "@/components/magicui/text-shimmer";
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { useInView } from "framer-motion";
-import { Sparkles } from "lucide-react";
-import Image from "next/image";
+import { Sparkles, ArrowRight, Loader } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
-import Sponsor from "@/components/sub/Sponsor";
-import RevolutSponsor from "../sub/RevolutSponsor";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const [isMobile, setIsMobile] = useState(false);
   const [remainingUsers, setRemainingUsers] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchRemainingUsers = async () => {
@@ -34,81 +43,94 @@ export default function HeroSection() {
     fetchRemainingUsers();
   }, []);
 
+  const onGetStartedClick = () => {
+    setIsLoading(true);
+    router.push('/dashboard');
+  };
+
   return (
-    <section
-      id="hero"
-      className="relative mx-auto mt-32 max-w-[80rem] px-6 text-center md:px-8"
-    >
-      {/* <div className="max-w-lg mx-auto mb-8">
-        <Sponsor position="bottom" />
-      </div> */}
-      <div className="backdrop-filter-[12px] inline-flex h-7 items-center justify-between rounded-full border border-white/5 bg-white/10 px-3 text-xs text-white dark:text-black transition-all ease-in hover:cursor-pointer hover:bg-white/20 group gap-1 translate-y-[-1rem] animate-fade-in opacity-0">
-        <TextShimmer className="inline-flex items-center justify-center">
-          <Link href="/dashboard" className="flex items-center gap-1">
-            <span>✨ Free for the beta version</span>{" "}
-            <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-          </Link>
-        </TextShimmer>
-      </div>
-      <h1 className="bg-gradient-to-br dark:from-white from-black from-30% dark:to-white/40 to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent text-balance sm:text-6xl md:text-7xl lg:text-8xl translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]">
-        Track your monthly subscriptions, 
-        <br className="hidden md:block" /> easily.
-      </h1>
-      <p className="mb-12 text-lg tracking-tight text-gray-400 md:text-xl text-balance translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:400ms]">
-        One place to track all your subscriptions,
-        <br className="hidden md:block" /> and never lose track of your bills.
-      </p>
-      <Button className="translate-y-[-1rem] animate-fade-in gap-1 rounded-lg text-white dark:text-black opacity-0 ease-in-out [--animation-delay:600ms]">
-        <Sparkles className="mr-2 h-4 w-4" />
-        <Link href="/dashboard">Get Started for FREE </Link>
-        <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
-      </Button>
-      <div
-        ref={ref}
-        className="relative mt-[8rem] animate-fade-up opacity-0 [--animation-delay:400ms] [perspective:2000px] after:absolute after:inset-0 after:z-50 after:[background:linear-gradient(to_top,hsl(var(--background))_30%,transparent)]"
-      >
-        <div
-          className={`rounded-xl border border-white/10 bg-white bg-opacity-[0.01] before:absolute before:bottom-1/2 before:left-0 before:top-0 before:h-full before:w-full before:opacity-0 before:[filter:blur(180px)] before:[background-image:linear-gradient(to_bottom,var(--color-one),var(--color-one),transparent_40%)] ${
-            inView ? "before:animate-image-glow" : ""
-          }`}
+    <section id="hero" className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-14 md:px-8 mt-20">
+      <div className="mx-auto max-w-5xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex h-7 items-center justify-between rounded-full border border-white/5 bg-white/70 px-3 text-xs text-white dark:text-black transition-all ease-in hover:cursor-pointer hover:bg-white/90 group gap-1 mb-6"
         >
-          <BorderBeam
-            size={200}
-            duration={12}
-            delay={11}
-            colorFrom="var(--color-one)"
-            colorTo="var(--color-two)"
-          />
-          <Image
-            src="/app.png"
-            alt="Hero Image"
-            width={1336}
-            height={768}
-            className="relative w-full h-full rounded-[inherit] border object-contain hidden md:block"
-          />
-          <Image
-            src="/calendar.png"
-            alt="Calendar Image"
-            width={1336}
-            height={768}
-            className="relative w-full h-full rounded-[inherit] border object-contain md:hidden"
-          />
-        </div>
+          <Link href="/dashboard" className="flex items-center gap-1">
+            <Sparkles className="h-4 w-4 text-[var(--color-one)]" />
+            <span>Free for personal use</span>
+            <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </Link>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl"
+        >
+          Track your finances, easily.
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-6 text-xl leading-8 text-black/80 dark:text-white/80"
+        >
+          Keep an eye on your personal subscriptions and business finances.
+          Never lose track of your bills, again.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-10 flex items-center justify-center"
+        >
+          <Button
+            className={cn(
+              "group relative w-full max-w-[200px] gap-2 overflow-hidden text-lg font-semibold tracking-tighter",
+              "transform-gpu ring-offset-current transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2"
+            )}
+            disabled={isLoading}
+            onClick={onGetStartedClick}
+          >
+            <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform-gpu bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-96 dark:bg-black" />
+            {!isLoading && <p>Get Started</p>}
+            {isLoading && <p>Processing</p>}
+            {isLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+          </Button>
+        </motion.div>
       </div>
-      <div className="max-w-lg mx-auto">
-        <Link href="https://litlyx.com/?via=subsmap.com" target="_blank">
-          <Image
-            src="/home-lit.svg"
-            alt="SubsMap Banner"
-            width={1200}
-            height={630}
-            className="w-full h-auto rounded-sm mt-4"
-          />
-        </Link>
-      </div>
-      <div className="max-w-lg mx-auto mt-8">
-        <Sponsor position="bottom" />
-      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className={cn(
+          "relative mx-auto w-full max-w-[50rem] overflow-hidden rounded-xl border",
+          "transform-gpu transition-all duration-300 ease-out hover:shadow-lg"
+        )}
+      >
+        <BorderBeam
+          size={200}
+          duration={12}
+          delay={11}
+          colorFrom="var(--color-one)"
+          colorTo="var(--color-two)"
+        />
+        <Image
+          src="/app.png"
+          alt="Hero Image"
+          width={1336}
+          height={768}
+          className="w-full h-auto object-cover max-w-[800px] max-h-[600px]"
+        />
+      </motion.div>
     </section>
   );
 }
