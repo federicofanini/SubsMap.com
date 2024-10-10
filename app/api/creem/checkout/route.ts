@@ -26,10 +26,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, message: "Product ID is required" }, { status: 400 });
   }
 
-  const apiKey = process.env.CREEM_API_KEY;
-  const creemTestUrl = "https://test-api.creem.io/v1/checkouts";
+  const apiKey = process.env.NODE_ENV === 'development'
+    ? "creem_test_1M4WnOGhcwgvTZ5YRY3JwP"
+    : process.env.CREEM_API_KEY;
+  const creemUrl = process.env.NODE_ENV === 'development'
+    ? "https://test-api.creem.io/v1/checkouts"
+    : "https://api.creem.io/v1/checkouts";
   const checkoutSessionResponse = await axios.post(
-    creemTestUrl,
+    creemUrl,
     {
       product_id: productId,
       request_id: "PAID",
