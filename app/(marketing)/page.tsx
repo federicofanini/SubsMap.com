@@ -1,4 +1,5 @@
 import HeroSection from "@/components/landing/hero-section";
+import PricingSection from "@/components/landing/pricing-section";
 import { SubscriptionsList } from "@/components/landing/subs-list";
 import Particles from "@/components/magicui/particles";
 import { SphereMask } from "@/components/magicui/sphere-mask";
@@ -17,6 +18,7 @@ export default async function Page() {
         staticity={40}
         color={"#ffffff"}
       />
+      <PricingSection />
     </>
   );
 }

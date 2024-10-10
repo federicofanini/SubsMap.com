@@ -12,7 +12,7 @@ export interface CheckoutSession {
   mode: string;
 }
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -20,12 +20,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, message: "User not authenticated" }, { status: 401 });
   }
 
+  const { productId } = await req.json();
+
+  if (!productId) {
+    return NextResponse.json({ success: false, message: "Product ID is required" }, { status: 400 });
+  }
+
   const apiKey = process.env.CREEM_API_KEY;
   const creemTestUrl = "https://test-api.creem.io/v1/checkouts";
   const checkoutSessionResponse = await axios.post(
     creemTestUrl,
     {
-      product_id: "prod_7iEgop41OX7hWWmoITtI9b",
+      product_id: productId,
       request_id: "PAID",
       customer: {
         email: user.email
