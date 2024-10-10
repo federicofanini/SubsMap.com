@@ -23,8 +23,8 @@ const demoPrices = [
     features: [
       "Basic subscription tracking",
       "Limited to personal use",
-      "Up to 5 subscriptions",
-      "Basic reminders",
+      "Unlimited subscriptions",
+      "Calendar of upcoming bills",
     ],
     yearlyPrice: 0,
     anchorPrice: 2900,
@@ -36,10 +36,11 @@ const demoPrices = [
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
-      "AI-powered analytics",
-      "Basic support",
-      "5 projects limit",
-      "Access to basic AI tools",
+      "Subscription tracking",
+      "Revenue tracking (Powered by Stripe)",
+      "Unlimited startups",
+      "Cost tracking",
+      "Calendar of upcoming bills",
     ],
     yearlyPrice: 2900,
     anchorPrice: 4900,
@@ -51,11 +52,11 @@ const demoPrices = [
     name: "Lifetime Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
-      "Advanced AI insights",
-      "Priority support",
-      "Unlimited projects",
-      "Access to all AI tools",
-      "Custom integrations",
+      "Subscription tracking",
+      "Revenue tracking (Powered by Stripe)",
+      "Unlimited startups",
+      "Cost tracking",
+      "Calendar of upcoming bills",
     ],
     yearlyPrice: 4900,
     anchorPrice: 8900,
@@ -92,9 +93,6 @@ export default function PricingSection() {
     <section id="pricing">
       <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-14 md:px-8">
         <div className="mx-auto max-w-5xl text-center">
-          <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
-            Pricing
-          </h4>
 
           <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
             Simple pricing for everyone.

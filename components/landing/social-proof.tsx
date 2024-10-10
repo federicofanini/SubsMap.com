@@ -68,7 +68,7 @@ export function SocialProof() {
     <section id="social-proof" className="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 py-14 md:px-8 mt-28">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
-          Simplifies financial tracking
+          Spend less, earn more.
         </h2>
 
         <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white/80">

@@ -25,19 +25,19 @@ export function HowItWorksSection() {
       icon: <Calendar className="h-6 w-6 text-[var(--color-one)]" />,
       title: "Track Subscriptions",
       description: "Never miss a bill again. Our calendar integration allows you to effortlessly track all your personal subscriptions.",
-      imagePlaceholder: "/personal.jpeg",
+      imagePlaceholder: "/1.png",
     },
     {
       icon: <PiggyBank className="h-6 w-6 text-[var(--color-two)]" />,
       title: "Set Savings Goals",
       description: "Easily set and track your personal savings goals. Visualize your progress and stay motivated to reach your financial targets.",
-      imagePlaceholder: "/savings.jpeg",
+      imagePlaceholder: "/6.png",
     },
     {
       icon: <Bell className="h-6 w-6 text-[var(--color-three)]" />,
-      title: "Smart Notifications",
-      description: "Receive timely reminders for upcoming bills and get personalized insights to optimize your spending habits.",
-      imagePlaceholder: "/notifications.jpeg",
+      title: "Don't forget to pay your bills",
+      description: "View a calendar of upcoming bills and get personalized insights to optimize your spending habits.",
+      imagePlaceholder: "/7.png",
     },
   ];
 
@@ -52,13 +52,13 @@ export function HowItWorksSection() {
       icon: <DollarSign className="h-6 w-6 text-[var(--color-three)]" />,
       title: "Monitor Expenses",
       description: "Keep a close eye on your startup's expenses. Our platform helps you categorize and track all business-related costs.",
-      imagePlaceholder: "/images/business-expenses-placeholder.jpg",
+      imagePlaceholder: "/4.png",
     },
     {
       icon: <Users className="h-6 w-6 text-[var(--color-one)]" />,
       title: "Manage Shared Expenses",
       description: "Efficiently track and manage shared business expenses across your organization. Simplify cost allocation among team members.",
-      imagePlaceholder: "/images/shared-expenses-placeholder.jpg",
+      imagePlaceholder: "/5.png",
     },
   ];
 
@@ -66,16 +66,16 @@ export function HowItWorksSection() {
     <section id="how-it-works" className="mx-auto flex max-w-screen-xl flex-col gap-12 px-4 py-14 md:px-8 mt-28">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
-          How It Works
+          How it works
         </h2>
 
         <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white/80">
-          Take control of your personal and business finances with these simple steps.
+          Take control of your personal and business finances with these simple tricks.
         </p>
       </div>
 
       <div className="mx-auto w-full max-w-6xl">
-        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white">Personal Use</h3>
+        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Personal use</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {personalSteps.map((step, idx) => (
             <motion.div
@@ -108,7 +108,7 @@ export function HowItWorksSection() {
           ))}
         </div>
 
-        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white">Business Use</h3>
+        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Business use</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {businessSteps.map((step, idx) => (
             <motion.div

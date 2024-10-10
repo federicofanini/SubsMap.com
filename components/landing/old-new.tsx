@@ -45,7 +45,7 @@ export function OldNewComparison() {
     <section className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-14 md:px-8 mt-28">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
-          Simplify Your Financial Management
+          Simplify your financial management
         </h2>
 
         <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white/80">

@@ -22,15 +22,15 @@ export function FAQSection() {
   const faqItems = [
     {
       question: "How does the subscription tracking work?",
-      answer: "Our platform automatically syncs with your connected accounts to track your subscriptions. You can also manually add subscriptions. We'll send you reminders before each payment is due."
+      answer: "You can track your subscriptions by adding them on the calendar. You can view and track monthly recurring costs."
     },
     {
       question: "Is my financial data secure?",
-      answer: "Yes, we take security very seriously. We use bank-level encryption to protect your data and never store sensitive information like full account numbers or passwords."
+      answer: "Yes, we take security very seriously. We don't share your data with anyone."
     },
     {
       question: "Can I use this for both personal and business finances?",
-      answer: "Absolutely! Our platform is designed to handle both personal and business financial tracking. You can easily separate and manage different financial profiles."
+      answer: "Absolutely! SubsMap is designed to handle both personal and business financial tracking. You can easily separate and manage different financial profiles."
     },
     {
       question: "How does the Stripe integration work for businesses?",
@@ -38,7 +38,7 @@ export function FAQSection() {
     },
     {
       question: "Is there a free plan available?",
-      answer: "Yes, we offer a free plan for personal use with basic features. For more advanced features and business use, we have affordable paid plans available."
+      answer: "Yes, we offer a free plan for personal use with basic features. For business use, we have affordable paid plans available."
     }
   ];
 
