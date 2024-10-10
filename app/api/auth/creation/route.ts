@@ -17,8 +17,6 @@ interface DbUser {
   firstName: string;
   lastName: string;
   imageUrl: string | null;
-  customer_id: string;
-  price_id: string;
   has_access: boolean;
 }
 
@@ -44,8 +42,6 @@ export async function GET(req: NextRequest) {
         firstName: user.given_name ?? "",
         lastName: user.family_name ?? "",
         imageUrl: user.picture ?? null,
-        customer_id: "",
-        price_id: "",
         has_access: false,
       },
     });
