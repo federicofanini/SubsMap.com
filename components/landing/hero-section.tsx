@@ -58,7 +58,7 @@ export default function HeroSection() {
           className="inline-flex h-7 items-center justify-between rounded-full border border-white/5 bg-white/70 px-3 text-xs text-white dark:text-black transition-all ease-in hover:cursor-pointer hover:bg-white/90 group gap-1 mb-6"
         >
           <Link href="/dashboard" className="flex items-center gap-1">
-            <Sparkles className="h-4 w-4 text-[var(--color-one)]" />
+            <Sparkles className="h-4 w-4 text-indigo-500" />
             <span>Free for personal use</span>
             <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
           </Link>
