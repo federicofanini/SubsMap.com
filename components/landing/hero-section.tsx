@@ -124,7 +124,7 @@ export default function HeroSection() {
           colorTo="var(--color-two)"
         />
         <Image
-          src="/app.png"
+          src="/hero.png"
           alt="Hero Image"
           width={1336}
           height={768}
