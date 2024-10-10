@@ -82,11 +82,10 @@ const BusinessDashboard: React.FC = () => {
         setExpenseData(expenseDataMap);
 
         // Fetch business expenses
-        const businessExpensesResponse = await fetch('/api/business/expenses?userId=business');
+        const businessExpensesResponse = await fetch('/api/business/expenses/list');
         if (businessExpensesResponse.ok) {
           const businessExpensesData = await businessExpensesResponse.json();
-          const totalBusinessExpenses = businessExpensesData.reduce((sum: number, expense: any) => sum + expense.amount, 0);
-          setBusinessExpenses(totalBusinessExpenses);
+          setBusinessExpenses(businessExpensesData.totalExpenses);
         } else {
           console.error('Failed to fetch business expenses');
         }
