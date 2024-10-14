@@ -41,7 +41,7 @@ const demoPrices = [
   //   interval: "free" as Interval,
   // },
   {
-    id: "prod_7iEgop41OX7hWWmoITtI9b",
+    id: "prod_7EKi79n4zbCV1h5ms0KQO7",
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -57,7 +57,7 @@ const demoPrices = [
     interval: "year" as Interval,
   },
   {
-    id: "prod_6R8v8RMB4IPzqHyyWEgw3e",
+    id: "prod_3wNFpfCa0MywsdzH9X0QRm",
     name: "Lifetime Deal",
     description: "Track your personal and business expenses in one place.",
     features: [
