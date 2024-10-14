@@ -20,24 +20,24 @@ export function HowItWorksSection() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const personalSteps = [
+  const mainSteps = [
     {
       icon: <Calendar className="h-6 w-6 text-[var(--color-one)]" />,
       title: "Track Subscriptions",
       description: "Never miss a bill again. Our calendar integration allows you to effortlessly track all your personal subscriptions.",
-      imagePlaceholder: "/1.png",
+      imagePlaceholder: "/step-1.png",
     },
     {
       icon: <PiggyBank className="h-6 w-6 text-[var(--color-two)]" />,
       title: "Set Savings Goals",
       description: "Easily set and track your personal savings goals. Visualize your progress and stay motivated to reach your financial targets.",
-      imagePlaceholder: "/6.png",
+      imagePlaceholder: "/step-2.png",
     },
     {
       icon: <Bell className="h-6 w-6 text-[var(--color-three)]" />,
       title: "Don't forget to pay your bills",
       description: "View a calendar of upcoming bills and get personalized insights to optimize your spending habits.",
-      imagePlaceholder: "/7.png",
+      imagePlaceholder: "/step-3.png",
     },
   ];
 
@@ -75,9 +75,8 @@ export function HowItWorksSection() {
       </div>
 
       <div className="mx-auto w-full max-w-6xl">
-        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Personal use</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {personalSteps.map((step, idx) => (
+          {mainSteps.map((step, idx) => (
             <motion.div
               key={step.title}
               initial={{ opacity: 0, y: 20 }}
@@ -95,7 +94,7 @@ export function HowItWorksSection() {
               <p className="text-sm leading-6 text-black/70 dark:text-white/70">
                 {step.description}
               </p>
-              <div className="relative w-full aspect-video overflow-hidden rounded-xl mt-4">
+              <div className="relative w-full aspect-square overflow-hidden rounded-xl mt-4">
                 <Image
                   src={step.imagePlaceholder}
                   alt={`Step: ${step.title}`}
@@ -108,7 +107,7 @@ export function HowItWorksSection() {
           ))}
         </div>
 
-        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Business use</h3>
+        <h3 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Grow your startup with data, not guesses.</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {businessSteps.map((step, idx) => (
             <motion.div

@@ -15,6 +15,15 @@ type Interval = "year" | "lifetime" | "free";
 export const toHumanPrice = (price: number, decimals: number = 2) => {
   return Number(price / 100).toFixed(decimals);
 };
+
+const Badge = ({ type }: { type: 'personal' | 'business' }) => (
+  <span className={`text-xs font-semibold mr-2 px-2.5 py-0.5 rounded ${
+    type === 'personal' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+  }`}>
+    {type === 'personal' ? 'Personal' : 'Business'}
+  </span>
+);
+
 const demoPrices = [
   // {
   //   id: "price_0",
@@ -36,11 +45,11 @@ const demoPrices = [
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
-      "Subscription tracking",
-      "Revenue tracking (Powered by Stripe)",
-      "Unlimited startups",
-      "Cost tracking",
-      "Calendar of upcoming bills",
+      { text: "Calendar of upcoming bills", type: "personal" },
+      { text: "Automated revenue tracking", type: "business" },
+      { text: "Business expenses tracking", type: "business" },
+      { text: "Startup details", type: "business" },
+      { text: "Unlimited startups", type: "business" },
     ],
     yearlyPrice: 2900,
     anchorPrice: 4900,
@@ -52,11 +61,11 @@ const demoPrices = [
     name: "Lifetime Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
-      "Subscription tracking",
-      "Revenue tracking (Powered by Stripe)",
-      "Unlimited startups",
-      "Cost tracking",
-      "Calendar of upcoming bills",
+      { text: "Calendar of upcoming bills", type: "personal" },
+      { text: "Automated revenue tracking", type: "business" },
+      { text: "Business expenses tracking", type: "business" },
+      { text: "Startup details", type: "business" },
+      { text: "Unlimited startups", type: "business" },
     ],
     yearlyPrice: 4900,
     anchorPrice: 8900,
@@ -174,7 +183,7 @@ export default function PricingSection() {
               >
                 <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform-gpu bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-96 dark:bg-black" />
                 {(!isLoading || (isLoading && id !== price.id)) && (
-                  <p>{price.yearlyPrice === 0 ? "Get Started" : "Subscribe"}</p>
+                  <p>{price.yearlyPrice === 0 ? "Get Started" : "Get Started"}</p>
                 )}
 
                 {isLoading && id === price.id && <p>Processing</p>}
@@ -191,8 +200,11 @@ export default function PricingSection() {
                       key={idx}
                       className="flex items-center gap-3 text-xs font-medium text-black dark:text-white"
                     >
-                      <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />
-                      <span className="flex">{feature}</span>
+                      {/*<CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />*/}
+                      <span className="flex items-center">
+                        <Badge type={feature.type} />
+                        {feature.text}
+                      </span>
                     </li>
                   ))}
                 </ul>

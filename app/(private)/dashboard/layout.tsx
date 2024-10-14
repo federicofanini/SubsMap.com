@@ -4,6 +4,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner";
+import { prisma } from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { redirect } from "next/navigation"
 
@@ -15,6 +16,15 @@ export default async function Layout({ children }: { children: React.ReactNode }
     return redirect("/api/auth/login");
   }
 
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { has_access: true },
+  });
+
+  if (!dbUser || !dbUser.has_access) {
+    redirect('/#pricing');
+  }
+  
   const { cookies } = await import("next/headers")
   return (
     <SidebarLayout
