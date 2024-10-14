@@ -47,5 +47,5 @@ export default async function SuccessPage({
     }
   }
 
-  return redirect('/dashboard/business');
+  return redirect('/dashboard');
 }
