@@ -37,8 +37,8 @@ export function FAQSection() {
       answer: "Once you connect your Stripe account, we automatically import your revenue data. This allows you to see real-time insights into your business income alongside your expenses."
     },
     {
-      question: "Is there a free plan available?",
-      answer: "Yes, we offer a free plan for personal use with basic features. For business use, we have affordable paid plans available."
+      question: "Which payment providers are supported?",
+      answer: "You can connect your revenue data from Stripe for now."
     }
   ];
 
