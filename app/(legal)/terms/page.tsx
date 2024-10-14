@@ -13,7 +13,7 @@ export default function TermsPage() {
       <section className="mb-8">
         <h2 className="mb-4 text-2xl font-semibold">1. Service Description</h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Subs Map is a subscription tracking service that helps you manage and monitor your monthly subscriptions.
+          Subs Map is a financial tracking service that helps you manage and monitor your business finances. We automatically track your revenue from Stripe, your business costs, and your monthly subscriptions. This automated tracking provides a view of your financial landscape, enabling you to efficiently manage your income and expenses.
         </p>
       </section>
 
