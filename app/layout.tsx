@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     icon: "/SubsMap.svg",
   },
   openGraph: {
+    siteName: "Subs Map",
+    url: "https://subsmap.com",
     images: [
       {
         url: "/hero.png",

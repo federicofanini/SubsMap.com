@@ -28,7 +28,7 @@ export default async function Page() {
       <OldNewComparison />
       <BenefitSection />
       <HowItWorksSection />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <PricingSection />
       <FAQSection />
     </>
