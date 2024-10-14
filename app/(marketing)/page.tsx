@@ -7,6 +7,7 @@ import { SphereMask } from "@/components/magicui/sphere-mask";
 import { BenefitSection } from "@/components/landing/benefit";
 import { HowItWorksSection } from "@/components/landing/how-it-works";
 import { FAQSection } from "@/components/landing/faq";
+import { Testimonials } from "@/components/landing/testimonials";
 
 export default async function Page() {
   return (
@@ -27,6 +28,7 @@ export default async function Page() {
       <OldNewComparison />
       <BenefitSection />
       <HowItWorksSection />
+      <Testimonials />
       <PricingSection />
       <FAQSection />
     </>
