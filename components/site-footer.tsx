@@ -83,10 +83,10 @@ export function SiteFooter() {
             <Link href="/" className="flex items-center gap-2">
               <TeamSwitcher />
             </Link>
-            <p className="max-w-xs font-semibold text-xs">
+            <p className="max-w-xs font-semibold text-sm">
               Grow your startup with data, not guesses.
             </p>
-            <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+            <span className="text-xs text-gray-500 sm:text-center dark:text-gray-400">
               Copyright © {new Date().getFullYear()}{" "}
               <Link href="/" className="cursor-pointer">
                 Subs Map
