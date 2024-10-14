@@ -12,9 +12,16 @@ const fontSans = FontSans({
 });
 export const metadata: Metadata = {
   title: "Subs Map",
-  description: "Track your monthly subscriptions, easily.",
+  description: "Track your finances, easily. Grow your startup with data, not guesses.",
   icons: {
     icon: "/SubsMap.svg",
+  },
+  openGraph: {
+    images: [
+      {
+        url: "/hero.png",
+      },
+    ],
   },
 };
 
