@@ -91,7 +91,7 @@ const SidebarTrigger = React.forwardRef<
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-2">
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </div>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm">
