@@ -10,7 +10,7 @@ import { data } from "../app-sidebar"
 import { UserMenu } from "@/components/user-menu"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { CalendarIcon, TrophyIcon } from "lucide-react"
+import { CalendarIcon, LucideBriefcaseBusiness, TrophyIcon } from "lucide-react"
 
 export const SIDEBAR_STATE_COOKIE = "sidebar:state"
 
@@ -91,19 +91,19 @@ const SidebarTrigger = React.forwardRef<
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-2">
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </div>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm">
           <Link href="/dashboard" className="flex items-center gap-2">
             <CalendarIcon className="size-3" />
-            <span className="hidden sm:inline">Calendar</span>
+            <span className="hidden sm:inline">Personal</span>
           </Link>
         </Button>
         <Button variant="outline" size="sm">
-          <Link href="/dashboard/leaderboard" className="flex items-center gap-2">
-            <TrophyIcon className="size-3" />
-            <span className="hidden sm:inline">Leaderboard</span>
+          <Link href="/dashboard/business" className="flex items-center gap-2">
+            <LucideBriefcaseBusiness className="size-3" />
+            <span className="hidden sm:inline">Business</span>
           </Link>
         </Button>
         <UserMenu />

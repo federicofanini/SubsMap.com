@@ -14,9 +14,13 @@ model User {
   lastName                  String
   email                     String
   imageUrl                  String?
-  customer_id               String
-  price_id                  String
   has_access                Boolean @default(false)
+
+  checkout_id               String?
+  order_id                  String?
+  customer_id               String?
+  product_id                String?
+  signature                 String?
 
   createdAt                 DateTime @default(now())
 }

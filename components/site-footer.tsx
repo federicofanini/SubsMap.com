@@ -2,6 +2,7 @@ import { ArrowRightIcon, DiscordLogoIcon, TwitterLogoIcon } from "@radix-ui/reac
 import { ReplaceAll } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { TeamSwitcher } from "./team-switcher";
 
 const footerNavs = [
   {
@@ -80,12 +81,24 @@ export function SiteFooter() {
         <div className="md:flex md:justify-between px-8 p-4 py-16 sm:pb-16 gap-4">
           <div className="mb-12 flex-col flex gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <ReplaceAll className="h-8 w-8 text-primary text-black" />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Subs Map
-              </span>
+              <TeamSwitcher />
             </Link>
-            <p className="max-w-xs">Track your monthly subscriptions, easily.</p>
+            <p className="max-w-xs font-semibold text-xs">
+              Grow your startup with data, not guesses.
+            </p>
+            <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+              Copyright © {new Date().getFullYear()}{" "}
+              <Link href="/" className="cursor-pointer">
+                Subs Map
+              </Link>
+              . All Rights Reserved.
+            </span>
+            <div className="flex items-center mt-4">
+              <Link href="https://x.com/FedericoFan" target="_blank" className="flex items-center gap-2">
+                <Image src="/ff.jpg" alt="Federico Fan" width={24} height={24} className="rounded-full" />
+                <span className="text-xs text-gray-500 mr-2">Made with ❤️ by <span className="font-semibold hover:underline">Federico Fan</span></span>
+              </Link>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-8 sm:gap-10 sm:grid-cols-3">
             {footerNavs.map((nav) => (
@@ -109,26 +122,7 @@ export function SiteFooter() {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:flex sm:items-center sm:justify-between rounded-md border-neutral-700/20 py-4 px-8 gap-2">
-          <div className="flex space-x-5 sm:justify-center sm:mt-0">
-            <div className="flex justify-center items-center mt-4 gap-2">
-              <Link href="https://x.com/FedericoFan" target="_blank" className="flex items-center gap-2">
-                <Image src="/ff.jpg" alt="Federico Fan" width={24} height={24} className="rounded-full" />
-                <span className="text-sm text-gray-500 mr-2">Powered by Federico Fan</span>
-              </Link>
-            </div>
-          </div>
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            Copyright © {new Date().getFullYear()}{" "}
-            <Link href="/" className="cursor-pointer">
-              Subs Map
-            </Link>
-            . All Rights Reserved.
-          </span>
-        </div>
-        
+        </div>        
       </div>
       {/*   <SiteBanner /> */}
     </footer>

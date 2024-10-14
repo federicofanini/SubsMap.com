@@ -7,86 +7,94 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import axios from "axios";
 
-type Interval = "month" | "year";
+type Interval = "year" | "lifetime" | "free";
 
 export const toHumanPrice = (price: number, decimals: number = 2) => {
   return Number(price / 100).toFixed(decimals);
 };
+
+const Badge = ({ type }: { type: 'personal' | 'business' }) => (
+  <span className={`text-xs font-semibold mr-2 px-2.5 py-0.5 rounded ${
+    type === 'personal' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+  }`}>
+    {type === 'personal' ? 'Personal' : 'Business'}
+  </span>
+);
+
 const demoPrices = [
+  // {
+  //   id: "price_0",
+  //   name: "Free Plan",
+  //   description: "Track your personal subscriptions for free.",
+  //   features: [
+  //     "Basic subscription tracking",
+  //     "Limited to personal use",
+  //     "Unlimited subscriptions",
+  //     "Calendar of upcoming bills",
+  //   ],
+  //   yearlyPrice: 0,
+  //   anchorPrice: 2900,
+  //   isMostPopular: false,
+  //   interval: "free" as Interval,
+  // },
   {
-    id: "price_1",
-    name: "Basic",
-    description: "A basic plan for startups and individual users",
+    id: "prod_7EKi79n4zbCV1h5ms0KQO7",
+    name: "1-Year Pass",
+    description: "Track your personal and business expenses in one place.",
     features: [
-      "AI-powered analytics",
-      "Basic support",
-      "5 projects limit",
-      "Access to basic AI tools",
+      { text: "Calendar of upcoming bills", type: "personal" },
+      { text: "Automated revenue tracking", type: "business" },
+      { text: "Business expenses tracking", type: "business" },
+      { text: "Startup details", type: "business" },
+      { text: "Unlimited startups", type: "business" },
     ],
-    monthlyPrice: 1000,
-    yearlyPrice: 10000,
+    yearlyPrice: 3900,
+    anchorPrice: 11900,
     isMostPopular: false,
+    interval: "year" as Interval,
   },
   {
-    id: "price_2",
-    name: "Premium",
-    description: "A premium plan for growing businesses",
+    id: "prod_3wNFpfCa0MywsdzH9X0QRm",
+    name: "Lifetime Deal",
+    description: "Track your personal and business expenses in one place.",
     features: [
-      "Advanced AI insights",
-      "Priority support",
-      "Unlimited projects",
-      "Access to all AI tools",
-      "Custom integrations",
+      { text: "Calendar of upcoming bills", type: "personal" },
+      { text: "Automated revenue tracking", type: "business" },
+      { text: "Business expenses tracking", type: "business" },
+      { text: "Startup details", type: "business" },
+      { text: "Unlimited startups", type: "business" },
     ],
-    monthlyPrice: 2000,
-    yearlyPrice: 20000,
+    yearlyPrice: 6900,
+    anchorPrice: 14900,
     isMostPopular: true,
-  },
-  {
-    id: "price_5",
-    name: "Enterprise",
-    description:
-      "An enterprise plan with advanced features for large organizations",
-    features: [
-      "Custom AI solutions",
-      "24/7 dedicated support",
-      "Unlimited projects",
-      "Access to all AI tools",
-      "Custom integrations",
-      "Data security and compliance",
-    ],
-    monthlyPrice: 5000,
-    yearlyPrice: 50000,
-    isMostPopular: false,
-  },
-  {
-    id: "price_6",
-    name: "Ultimate",
-    description: "The ultimate plan with all features for industry leaders",
-    features: [
-      "Bespoke AI development",
-      "White-glove support",
-      "Unlimited projects",
-      "Priority access to new AI tools",
-      "Custom integrations",
-      "Highest data security and compliance",
-    ],
-    monthlyPrice: 8000,
-    yearlyPrice: 80000,
-    isMostPopular: false,
+    interval: "lifetime" as Interval,
   },
 ];
 
 export default function PricingSection() {
-  const [interval, setInterval] = useState<Interval>("month");
   const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState<string | null>(null);
+  const router = useRouter();
 
   const onSubscribeClick = async (priceId: string) => {
     setIsLoading(true);
     setId(priceId);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+    if (priceId === "price_0") {
+      router.push('/dashboard');
+    } else {
+      try {
+        const { data } = await axios.post("/api/creem/checkout", { productId: priceId });
+        if (data.success) {
+          const checkoutSession = data.checkout;
+          router.push(checkoutSession.checkout_url);
+        }
+      } catch (error) {
+        console.error("Error creating checkout session:", error);
+      }
+    }
     setIsLoading(false);
   };
 
@@ -94,9 +102,6 @@ export default function PricingSection() {
     <section id="pricing">
       <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-14 md:px-8">
         <div className="mx-auto max-w-5xl text-center">
-          <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
-            Pricing
-          </h4>
 
           <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
             Simple pricing for everyone.
@@ -109,25 +114,12 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="flex w-full items-center justify-center space-x-2">
-          <Switch
-            id="interval"
-            onCheckedChange={(checked) => {
-              setInterval(checked ? "year" : "month");
-            }}
-          />
-          <span>Annual</span>
-          <span className="inline-block whitespace-nowrap rounded-full bg-black px-2.5 py-1 text-[11px] font-semibold uppercase leading-5 tracking-wide text-white dark:bg-white dark:text-black">
-            2 MONTHS FREE ✨
-          </span>
-        </div>
-
-        <div className="mx-auto grid w-full justify-center sm:grid-cols-2 lg:grid-cols-4 flex-col gap-4">
+        <div className="mx-auto grid w-full justify-center sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:max-w-6xl items-center">
           {demoPrices.map((price, idx) => (
             <div
               key={price.id}
               className={cn(
-                "relative flex max-w-[400px] flex-col gap-8 rounded-2xl border p-4 text-black dark:text-white overflow-hidden",
+                "relative flex max-w-[400px] flex-col gap-8 rounded-2xl border p-4 text-black dark:text-white overflow-hidden mx-auto",
                 {
                   "border-2 border-[var(--color-one)] dark:border-[var(--color-one)]":
                     price.isMostPopular,
@@ -146,7 +138,7 @@ export default function PricingSection() {
               </div>
 
               <motion.div
-                key={`${price.id}-${interval}`}
+                key={`${price.id}-${price.interval}`}
                 initial="initial"
                 animate="animate"
                 variants={{
@@ -164,14 +156,20 @@ export default function PricingSection() {
                   delay: 0.1 + idx * 0.05,
                   ease: [0.21, 0.47, 0.32, 0.98],
                 }}
-                className="flex flex-row gap-1"
+                className="flex flex-row gap-1 items-center"
               >
+                <span className="text-xl font-semibold line-through text-gray-500">
+                  ${toHumanPrice(price.anchorPrice, 0)}
+                </span>
                 <span className="text-4xl font-bold text-black dark:text-white">
-                  $
-                  {interval === "year"
-                    ? toHumanPrice(price.yearlyPrice, 0)
-                    : toHumanPrice(price.monthlyPrice, 0)}
-                  <span className="text-xs"> / {interval}</span>
+                  {price.yearlyPrice === 0 ? (
+                    "Free"
+                  ) : (
+                    <>
+                      ${toHumanPrice(price.yearlyPrice, 0)}
+                      <span className="text-xs"> / {price.interval}</span>
+                    </>
+                  )}
                 </span>
               </motion.div>
 
@@ -185,10 +183,10 @@ export default function PricingSection() {
               >
                 <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform-gpu bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-96 dark:bg-black" />
                 {(!isLoading || (isLoading && id !== price.id)) && (
-                  <p>Subscribe</p>
+                  <p>{price.yearlyPrice === 0 ? "Get Started" : "Get Started"}</p>
                 )}
 
-                {isLoading && id === price.id && <p>Subscribing</p>}
+                {isLoading && id === price.id && <p>Processing</p>}
                 {isLoading && id === price.id && (
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -202,8 +200,11 @@ export default function PricingSection() {
                       key={idx}
                       className="flex items-center gap-3 text-xs font-medium text-black dark:text-white"
                     >
-                      <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />
-                      <span className="flex">{feature}</span>
+                      {/*<CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />*/}
+                      <span className="flex items-center">
+                        <Badge type={feature.type} />
+                        {feature.text}
+                      </span>
                     </li>
                   ))}
                 </ul>

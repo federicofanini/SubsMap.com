@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from '@/lib/db';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(req: NextRequest) {
   try {
@@ -42,6 +43,28 @@ export async function GET(req: NextRequest) {
         monthlyExpenses[monthName] += amount;
       }
     });
+
+    // Set up real-time subscription
+    const realtimeClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const channel = realtimeClient
+      .channel('expenses-chart')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'StartupSubscription',
+          filter: `startupId=eq.${startupId} AND userId=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('Change received in expenses chart!', payload);
+        }
+      )
+      .subscribe();
 
     return NextResponse.json(monthlyExpenses);
   } catch (error) {

@@ -28,8 +28,7 @@ import {
   User,
   Settings,
   Rss,
-  ShipIcon,
-  ReplaceAll
+  ShipIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -51,7 +50,7 @@ export const data = {
   teams: [
     {
       name: "Subs Map",
-      logo: ReplaceAll,
+      logo: "/SubsMap.svg",
       plan: "Enterprise",
     },
   ],
@@ -176,7 +175,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <SidebarItem>

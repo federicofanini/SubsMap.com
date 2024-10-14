@@ -1,7 +1,12 @@
 import HeroSection from "@/components/landing/hero-section";
-import { SubscriptionsList } from "@/components/landing/subs-list";
+import PricingSection from "@/components/landing/pricing-section";
+import { SocialProof } from "@/components/landing/social-proof";
+import { OldNewComparison } from "@/components/landing/old-new";
 import Particles from "@/components/magicui/particles";
 import { SphereMask } from "@/components/magicui/sphere-mask";
+import { BenefitSection } from "@/components/landing/benefit";
+import { HowItWorksSection } from "@/components/landing/how-it-works";
+import { FAQSection } from "@/components/landing/faq";
 
 export default async function Page() {
   return (
@@ -17,6 +22,13 @@ export default async function Page() {
         staticity={40}
         color={"#ffffff"}
       />
+      <SocialProof />
+      <SphereMask />
+      <OldNewComparison />
+      <BenefitSection />
+      <HowItWorksSection />
+      <PricingSection />
+      <FAQSection />
     </>
   );
 }

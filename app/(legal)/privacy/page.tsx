@@ -13,12 +13,24 @@ export default function PrivacyPage() {
       <section className="mb-8">
         <h2 className="mb-4 text-2xl font-semibold">1. Information We Collect</h2>
         <p className="text-gray-600 dark:text-gray-300">
-          We collect information you provide directly to us, such as your name, email address, and subscription details.
+          We collect information you provide directly to us, such as your name, email address, and subscription details. Additionally, we may collect information about your usage of our service, including:
+          <br />
+          <br />
+          • Your login information and activity on our platform
+          <br />
+          • Details about the subscriptions you track, including billing dates and amounts
+          <br />
+          • Information from connected services (like Stripe) if you choose to integrate them
+          <br />
+          • Device information, including your IP address, browser type, and operating system
+          <br />
+          <br />
+          We also use cookies and similar technologies to collect data about your browsing behavior and preferences. This helps us improve our service and provide a more personalized experience.
         </p>
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">2. How We Use Your Information</h2>
+        <h2 className="mb-4 text-2xl font-semibold">2. How we use your information</h2>
         <p className="text-gray-600 dark:text-gray-300">
           We use your information to provide and improve our subscription tracking service, communicate with you, and ensure the security of your account.
         </p>
@@ -39,7 +51,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">5. Changes to This Policy</h2>
+        <h2 className="mb-4 text-2xl font-semibold">5. Changes to this Policy</h2>
         <p className="text-gray-600 dark:text-gray-300">
           We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.
         </p>
