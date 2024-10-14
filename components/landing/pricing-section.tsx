@@ -16,21 +16,21 @@ export const toHumanPrice = (price: number, decimals: number = 2) => {
   return Number(price / 100).toFixed(decimals);
 };
 const demoPrices = [
-  {
-    id: "price_0",
-    name: "Free Plan",
-    description: "Track your personal subscriptions for free.",
-    features: [
-      "Basic subscription tracking",
-      "Limited to personal use",
-      "Unlimited subscriptions",
-      "Calendar of upcoming bills",
-    ],
-    yearlyPrice: 0,
-    anchorPrice: 2900,
-    isMostPopular: false,
-    interval: "free" as Interval,
-  },
+  // {
+  //   id: "price_0",
+  //   name: "Free Plan",
+  //   description: "Track your personal subscriptions for free.",
+  //   features: [
+  //     "Basic subscription tracking",
+  //     "Limited to personal use",
+  //     "Unlimited subscriptions",
+  //     "Calendar of upcoming bills",
+  //   ],
+  //   yearlyPrice: 0,
+  //   anchorPrice: 2900,
+  //   isMostPopular: false,
+  //   interval: "free" as Interval,
+  // },
   {
     id: "prod_7iEgop41OX7hWWmoITtI9b",
     name: "1-Year Pass",
@@ -105,12 +105,12 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="mx-auto grid w-full justify-center sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:max-w-6xl">
+        <div className="mx-auto grid w-full justify-center sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:max-w-6xl items-center">
           {demoPrices.map((price, idx) => (
             <div
               key={price.id}
               className={cn(
-                "relative flex max-w-[400px] flex-col gap-8 rounded-2xl border p-4 text-black dark:text-white overflow-hidden",
+                "relative flex max-w-[400px] flex-col gap-8 rounded-2xl border p-4 text-black dark:text-white overflow-hidden mx-auto",
                 {
                   "border-2 border-[var(--color-one)] dark:border-[var(--color-one)]":
                     price.isMostPopular,

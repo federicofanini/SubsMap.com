@@ -20,7 +20,7 @@ export default async function BusinessLayout({
   });
 
   if (!dbUser || !dbUser.has_access) {
-    redirect('/pay');
+    redirect('/#pricing');
   }
 
   return <>{children}</>;

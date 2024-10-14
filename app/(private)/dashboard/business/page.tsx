@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import TopBarMenu from '@/components/business/TopBarMenu';
 import SummaryCards from '@/components/business/SummaryCards';
 import StartupCard from '@/components/business/StartupCard';
+import { Progress } from "@/components/ui/progress";
 
 interface Startup {
   id: string;
@@ -37,10 +38,12 @@ const BusinessDashboard: React.FC = () => {
   const [expenseData, setExpenseData] = useState<{ [key: string]: ExpenseData }>({});
   const [businessExpenses, setBusinessExpenses] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchStartups = async () => {
       setIsLoading(true);
+      setProgress(10);
       try {
         const response = await fetch('/api/startups/startupList');
         if (!response.ok) {
@@ -48,6 +51,7 @@ const BusinessDashboard: React.FC = () => {
         }
         const data = await response.json();
         setStartups(data);
+        setProgress(30);
 
         // Fetch Stripe data and expenses for each startup
         const dataPromises = data.map(async (startup: Startup) => {
@@ -80,6 +84,7 @@ const BusinessDashboard: React.FC = () => {
         
         setStripeData(stripeDataMap);
         setExpenseData(expenseDataMap);
+        setProgress(70);
 
         // Fetch business expenses
         const businessExpensesResponse = await fetch('/api/business/expenses/list');
@@ -89,6 +94,7 @@ const BusinessDashboard: React.FC = () => {
         } else {
           console.error('Failed to fetch business expenses');
         }
+        setProgress(100);
       } catch (error) {
         console.error('Error fetching startups:', error);
       } finally {
@@ -125,21 +131,38 @@ const BusinessDashboard: React.FC = () => {
       {/* Top Bar menu */}
       <TopBarMenu />
 
-      {/* Aggregate Summary Card */}
-      <SummaryCards totalRevenue={aggregateData.totalRevenue} totalExpenses={aggregateData.totalExpenses} />
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center h-64">
+          <Progress value={progress} className="w-[60%] mb-4" />
+          <p className="text-xs font-semibold text-muted-foreground">While loading dashboard data...</p>
+          <p className="text-lg mt-10 font-semibold bg-white/10 p-4 rounded-lg">
+          Success is not final; 
+          failure is not fatal: 
+          <br /> 
+          it is the courage to continue that counts. 
+          <br /> 
+          <br /> 
+          - Winston Churchill</p>
+        </div>
+      ) : (
+        <>
+          {/* Aggregate Summary Card */}
+          <SummaryCards totalRevenue={aggregateData.totalRevenue} totalExpenses={aggregateData.totalExpenses} />
 
-      {/* Startup Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {startups.map((startup) => (
-          <StartupCard
-            key={startup.id}
-            startup={startup}
-            stripeData={stripeData[startup.id]}
-            expenseData={expenseData[startup.id]}
-            calculateMRR={calculateMRR}
-          />
-        ))}
-      </div>
+          {/* Startup Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {startups.map((startup) => (
+              <StartupCard
+                key={startup.id}
+                startup={startup}
+                stripeData={stripeData[startup.id]}
+                expenseData={expenseData[startup.id]}
+                calculateMRR={calculateMRR}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
