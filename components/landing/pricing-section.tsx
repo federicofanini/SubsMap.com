@@ -26,7 +26,7 @@ const Badge = ({ type }: { type: 'personal' | 'business' }) => (
 
 const demoPrices = [
   {
-    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_7H2rHDKxQVcbg9xdAe65PD",
+    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_32yUKFpHDyIvCUPsny7rk6",
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -42,7 +42,7 @@ const demoPrices = [
     interval: "year" as Interval,
   },
   {
-    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_41mtWdZAINFQxOMO3chRni",
+    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_6z2UNWpcM6KjNSLYawg0Mv",
     name: "Lifetime Deal",
     description: "Track your personal and business expenses in one place.",
     features: [
