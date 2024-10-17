@@ -41,7 +41,7 @@ const demoPrices = [
   //   interval: "free" as Interval,
   // },
   {
-    id: "prod_7EKi79n4zbCV1h5ms0KQO7",
+    id: "prod_7H2rHDKxQVcbg9xdAe65PD",
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -51,13 +51,13 @@ const demoPrices = [
       { text: "Startup details", type: "business" },
       { text: "Unlimited startups", type: "business" },
     ],
-    yearlyPrice: 3900,
-    anchorPrice: 11900,
+    yearlyPrice: 1200,
+    anchorPrice: 3600,
     isMostPopular: false,
     interval: "year" as Interval,
   },
   {
-    id: "prod_3wNFpfCa0MywsdzH9X0QRm",
+    id: "prod_41mtWdZAINFQxOMO3chRni",
     name: "Lifetime Deal",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -67,8 +67,8 @@ const demoPrices = [
       { text: "Startup details", type: "business" },
       { text: "Unlimited startups", type: "business" },
     ],
-    yearlyPrice: 6900,
-    anchorPrice: 14900,
+    yearlyPrice: 2900,
+    anchorPrice: 6900,
     isMostPopular: true,
     interval: "lifetime" as Interval,
   },
