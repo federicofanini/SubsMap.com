@@ -2,6 +2,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
+export const dynamic = 'force-dynamic';
+
 export interface CheckoutSession {
   id: string;
   object: string;

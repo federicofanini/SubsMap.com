@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { CheckIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
+import { LogoutLink, useKindeAuth, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import Link from "next/link";
 
 type Interval = "year" | "lifetime" | "free";
 
@@ -25,23 +25,8 @@ const Badge = ({ type }: { type: 'personal' | 'business' }) => (
 );
 
 const demoPrices = [
-  // {
-  //   id: "price_0",
-  //   name: "Free Plan",
-  //   description: "Track your personal subscriptions for free.",
-  //   features: [
-  //     "Basic subscription tracking",
-  //     "Limited to personal use",
-  //     "Unlimited subscriptions",
-  //     "Calendar of upcoming bills",
-  //   ],
-  //   yearlyPrice: 0,
-  //   anchorPrice: 2900,
-  //   isMostPopular: false,
-  //   interval: "free" as Interval,
-  // },
   {
-    id: "prod_7H2rHDKxQVcbg9xdAe65PD",
+    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_7H2rHDKxQVcbg9xdAe65PD",
     name: "1-Year Pass",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -57,7 +42,7 @@ const demoPrices = [
     interval: "year" as Interval,
   },
   {
-    id: "prod_41mtWdZAINFQxOMO3chRni",
+    id: process.env.NODE_ENV === 'development' ? "prod_6R8v8RMB4IPzqHyyWEgw3e" : "prod_41mtWdZAINFQxOMO3chRni",
     name: "Lifetime Deal",
     description: "Track your personal and business expenses in one place.",
     features: [
@@ -78,6 +63,9 @@ export default function PricingSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState<string | null>(null);
   const router = useRouter();
+  const { user } = useKindeBrowserClient()
+
+  console.log("user", user);
 
   const onSubscribeClick = async (priceId: string) => {
     setIsLoading(true);
@@ -173,24 +161,48 @@ export default function PricingSection() {
                 </span>
               </motion.div>
 
-              <Button
-                className={cn(
-                  "group relative w-full gap-2 overflow-hidden text-lg font-semibold tracking-tighter",
-                  "transform-gpu ring-offset-current transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2"
-                )}
-                disabled={isLoading}
-                onClick={() => void onSubscribeClick(price.id)}
-              >
-                <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform-gpu bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-96 dark:bg-black" />
-                {(!isLoading || (isLoading && id !== price.id)) && (
-                  <p>{price.yearlyPrice === 0 ? "Get Started" : "Get Started"}</p>
-                )}
+              { user ? 
+                <div className="text-xs font-semibold flex flex-row gap-1 items-center">
+                  <p className="text-muted-foreground">Signed in as</p> {user?.email}
+                  <Button size="sm" variant="destructive" className="text-xs h-6 ml-1" asChild>
+                    <LogoutLink>Sign out</LogoutLink>
+                  </Button>
+                </div> 
+                : "" 
+              }
 
-                {isLoading && id === price.id && <p>Processing</p>}
-                {isLoading && id === price.id && (
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                )}
-              </Button>
+              { !user ? (
+                <Button
+                  className={cn(
+                    "group relative w-full gap-2 overflow-hidden text-lg font-semibold tracking-tighter",
+                    "transform-gpu ring-offset-current transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2"
+                  )}
+                  asChild
+                > 
+                  <Link href="/dashboard">
+                    <p>Get Started</p>
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  className={cn(
+                    "group relative w-full gap-2 overflow-hidden text-lg font-semibold tracking-tighter",
+                    "transform-gpu ring-offset-current transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2"
+                  )}
+                  disabled={isLoading}
+                  onClick={() => void onSubscribeClick(price.id)}
+                >
+                  <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform-gpu bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-96 dark:bg-black" />
+                  {(!isLoading || (isLoading && id !== price.id)) && (
+                    <p>Get Access</p>
+                  )}
+
+                  {isLoading && id === price.id && <p>Processing</p>}
+                  {isLoading && id === price.id && (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                </Button>
+              )}
 
               <hr className="m-0 h-px w-full border-none bg-gradient-to-r from-neutral-200/0 via-neutral-500/30 to-neutral-200/0" />
               {price.features && price.features.length > 0 && (
