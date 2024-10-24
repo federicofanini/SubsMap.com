@@ -16,15 +16,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
     return redirect("/api/auth/login");
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { has_access: true },
-  });
-
-  if (!dbUser || !dbUser.has_access) {
-    redirect('/#pricing');
-  }
-  
   const { cookies } = await import("next/headers")
   return (
     <SidebarLayout
